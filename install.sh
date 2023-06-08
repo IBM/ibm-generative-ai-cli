@@ -17,11 +17,11 @@ then
         exit 1
     fi
 else
-    DETECTED="$(node -v)"
-    echo $DETECTED 
     MINIMAL="v16.10.0"
-    SORTED=($(for VER in "$DETECTED" "$MINIMAL"; do echo "$VER"; done | sort -V))
-    if [ "${SORTED[0]}" = "$DETECTED" ]; then
+    DETECTED=`node -v`
+    echo $DETECTED 
+    RESULT=`node -e "console.log(\"$DETECTED\".replace('v', '').localeCompare(\"$MINIMAL\".replace('v', ''), undefined, { numeric: true }))"`
+    if [ $RESULT -lt 0 ]; then
         echo "Minimal supported version is" $MINIMAL
         exit 1
     fi
