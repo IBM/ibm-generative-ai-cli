@@ -1,0 +1,54 @@
+{
+  "name": "@ibm-generative-ai/cli",
+  "version": "1.0.0",
+  "description": "CLI for IBM Generative AI",
+  "keywords": [
+    "ai",
+    "generative",
+    "genai",
+    "ibm",
+    "cli"
+  ],
+  "homepage": "https://workbench.res.ibm.com",
+  "license": "MIT",
+  "repository": "https://github.com/IBM/ibm-generative-ai-cli.git",
+  "type": "module",
+  "bin": {
+    "genai": "./src/cli.js"
+  },
+  "files": [
+    "src/**/*"
+  ],
+  "scripts": {
+    "start": "./src/cli.js",
+    "lint": "eslint",
+    "prepare": "husky install"
+  },
+  "packageManager": "yarn@3.5.0",
+  "engines": {
+    "node": ">=16.10.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.md": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@ibm-generative-ai/node-sdk": "^1.1.0",
+    "lodash": "^4.17.21",
+    "stream-json": "^1.7.5",
+    "yaml": "^2.3.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "husky": "^8.0.0",
+    "prettier": "^2.8.8"
+  }
+}
