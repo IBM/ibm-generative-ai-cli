@@ -29,15 +29,31 @@ This project provides convenient access to the Generative AI API from from the c
 
 ![-----------------------------------------------------](./assets/img/rainbow.png)
 
-### Installation
+## Installation
 
-Install package globally using npm:
+The CLI is distributed as an [npm](https://www.npmjs.com/package/@ibm-generative-ai/cli) package. [NodeJS](https://nodejs.org) runtime with sufficient version is required.
+
+### Script
+
+Preferred way of installing the CLI is the install script. If NodeJS is not detected, it is installed via [nvm](https://github.com/nvm-sh/nvm).
+
+```bash
+curl -o- https://raw.githubusercontent.com/IBM/ibm-generative-ai-cli/main/install.sh | bash
+```
+
+```bash
+wget -qO- https://raw.githubusercontent.com/IBM/ibm-generative-ai-cli/main/install.sh | bash
+```
+
+### NPM
+
+The CLI can also be installed directly using npm:
 
 ```bash
 npm install -g @ibm-generative-ai/cli
 ```
 
-### Configuration
+## Configuration
 
 Create default configuration:
 
@@ -45,7 +61,7 @@ Create default configuration:
 genai config
 ```
 
-### Usage
+## Usage
 
 ```bash
 # Run single generate request:

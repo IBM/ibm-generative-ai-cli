@@ -2,7 +2,7 @@
 
 set -e
 
-echo -n "Checking Node installation ... "
+echo -n "Checking NodeJS installation ... "
 if ! command -v node &> /dev/null
 then
     echo "Node runtime hasn't been detected, installing via nvm"
@@ -17,11 +17,18 @@ then
         exit 1
     fi
 else
-    echo "Node detected"
+    DETECTED="$(node -v)"
+    echo $DETECTED 
+    MINIMAL="v16.10.0"
+    SORTED=($(for VER in "$DETECTED" "$MINIMAL"; do echo "$VER"; done | sort -V))
+    if [ "${SORTED[0]}" = "$DETECTED" ]; then
+        echo "Minimal supported version is" $MINIMAL
+        exit 1
+    fi
 fi
 
 echo "Installing the command ..."
-npm install -g @ibm-generative-ai/cli
+npm install --loglevel=error -g @ibm-generative-ai/cli
 
 echo -n "Checking the command version ... "
 if ! command bam --version
