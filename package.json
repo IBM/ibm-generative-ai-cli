@@ -11,7 +11,13 @@
   ],
   "homepage": "https://workbench.res.ibm.com",
   "license": "MIT",
-  "repository": "https://github.com/IBM/ibm-generative-ai-cli.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IBM/ibm-generative-ai-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IBM/ibm-generative-ai-cli/issues"
+  },
   "type": "module",
   "bin": {
     "genai": "./src/cli.js"
