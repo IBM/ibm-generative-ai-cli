@@ -34,34 +34,39 @@ This project provides convenient access to the Generative AI API from from the c
 Install package globally using npm:
 
 ```bash
-$ npm install @ibm-generative-ai/cli -g
+npm install -g @ibm-generative-ai/cli
+```
+
+### Configuration
+
+Create default configuration:
+
+```bash
+genai config
 ```
 
 ### Usage
 
 ```bash
-# Configure the CLI with your api key:
-$ export GENAI_API_KEY=pak-...
-
 # Run single generate request:
-$ genai generate "Once upon a time there lived a rabbit"
+genai generate "Once upon a time there lived a rabbit"
 # " called Edward. He lived well because he had some things to eat. He had a wife called Daisy"
 
 # Run multiple generate requests from a file:
 # "Best Christmas gift for dad: "
 # "Best Christmas gift for mum: "
 # "Best Christmas gift for dog: "
-$ genai generate -f inputs.txt
+genai generate -f inputs.txt
 # "a new wallet"
 # "a day out"
 # "a bone"
 
 # Run tokenize request:
-$ genai tokenize "This is a future."
+genai tokenize "This is a future."
 # {"token_count":5,"tokens":["This", "is", "a", "future", "."]}
 
 # Retrieve generate config
-$ genai generate config
+genai generate config
 # model_id: google/flan-ul2,
 # parameters:
 #   max_new_tokens: 1,
@@ -69,19 +74,19 @@ $ genai generate config
 #
 
 # Update generate config
-$ genai generate config -m google/flan-ul2 --decoding-method greedy --max-new-tokens 5 --min-new-tokens 1
+genai generate config -m google/flan-ul2 --decoding-method greedy --max-new-tokens 5 --min-new-tokens 1
 
 # Enter interactive mode
-$ genai generate interactive
+genai generate interactive
 
 # List models
-$ genai models list
+genai models list
 # google/flan-t5-xxl
 # google/flan-ul2
 # ...
 
 # Show model details
-$ genai models info google/flan-ul2
+genai models info google/flan-ul2
 # id: google/flan-ul2
 # name: flan-ul2 (20B)
 # size: 20B
