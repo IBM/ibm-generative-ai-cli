@@ -4,6 +4,9 @@
 
 This project provides convenient access to the Generative AI API from from the command line. For a full description of the API, please visit the [Generative AI API Docs](https://workbench.res.ibm.com/docs/api-reference).
 
+*Are you looking for an SDK?<br>
+If so, check out the [NodeJS SDK](https://github.com/IBM/ibm-generative-ai-node-sdk) and [Python SDK](https://github.com/IBM/ibm-generative-ai).*
+
 </div>
 
 ![-----------------------------------------------------](./assets/img/rainbow.png)
