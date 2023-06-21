@@ -19,7 +19,7 @@ then
 else
     MINIMAL="v16.10.0"
     DETECTED=`node -v`
-    echo $DETECTED 
+    echo $DETECTED
     RESULT=`node -e "console.log(\"$DETECTED\".replace('v', '').localeCompare(\"$MINIMAL\".replace('v', ''), undefined, { numeric: true }))"`
     if [ $RESULT -lt 0 ]; then
         echo "Minimal supported version is" $MINIMAL
@@ -31,7 +31,7 @@ echo "Installing the command ..."
 npm install --loglevel=error -g @ibm-generative-ai/cli
 
 echo -n "Checking the command version ... "
-if ! command bam --version
+if ! command genai --version
 then
     echo "Failure, make sure your PATH is set up correctly"
 fi
