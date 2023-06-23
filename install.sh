@@ -78,23 +78,23 @@ if [ -n "$HAS_NVM_INSTALLED" ]; then
   echo "Installing @ibm-generative-ai/cli ..."
   npm install --loglevel error -g @ibm-generative-ai/cli
 else
-  if [ -z "$PROFILE_PATH" ]; then
-    echo "Profile cannot be detected."
-    exit 1
-  fi
-
   INSTALL_DIR="$HOME/.genai/cli"
   mkdir -p "$INSTALL_DIR"
 
   echo "Installing @ibm-generative-ai/cli ..."
   npm install --prefix="$INSTALL_DIR" --quiet -g @ibm-generative-ai/cli
 
-  # Removing already existing profile updates
-  sed -i -e '/# GenAI CLI/{N;d;}' "$PROFILE_PATH"
-
   export PATH="$INSTALL_DIR/bin:$PATH"
-  echo "# GenAI CLI (do not modify)" >> "$PROFILE_PATH"
-  echo "export PATH=\"$PATH\"" >> "$PROFILE_PATH"
+
+  if [ -z "$PROFILE_PATH" ]; then
+    echo "Bash profile (.bashrc / .bash_profile / .zprofile / .zshrc) was not detected."
+  else
+    # Removing already existing profile updates
+    sed -i -e '/# GenAI CLI/{N;d;}' "$PROFILE_PATH"
+
+    echo "# GenAI CLI (do not modify)" >> "$PROFILE_PATH"
+    echo "export PATH=\"$PATH\"" >> "$PROFILE_PATH"
+  fi
 fi
 
 echo -n "Checking the command version ... "
@@ -113,7 +113,11 @@ if command genai --version 2>/dev/null ; then
   echo ""
   echo "Done!"
   echo ""
-  echo "Start using GenAI CLI with the \"genai\" command."
+  if [ -z "$PROFILE_PATH" ]; then
+    echo "We were not able to modify your bash profile. You will need to run GenAI CLI with \"npx genai\"."
+  else
+    echo "Start using GenAI CLI with the \"genai\" command."
+  fi
 else
     echo "";
     echo "Failure, make sure your PATH is set up correctly"
