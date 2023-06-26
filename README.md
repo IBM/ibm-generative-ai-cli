@@ -43,11 +43,11 @@ The CLI is distributed as an [npm](https://www.npmjs.com/package/@ibm-generative
 Preferred way of installing the CLI is the install script. If NodeJS is not detected, it is installed via [nvm](https://github.com/nvm-sh/nvm).
 
 ```bash
-curl -o- https://raw.githubusercontent.com/IBM/ibm-generative-ai-cli/main/install.sh | source 
+source <(curl -sSL https://raw.githubusercontent.com/IBM/ibm-generative-ai-cli/main/install.sh) 
 ```
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/IBM/ibm-generative-ai-cli/main/install.sh | source
+source <(wget -qO- https://raw.githubusercontent.com/IBM/ibm-generative-ai-cli/main/install.sh)
 ```
 
 ### NPM
