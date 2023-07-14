@@ -10,6 +10,7 @@
   parserOptions:
     ecmaVersion: "latest"
     sourceType: "module"
+  ignorePatterns: ["src/utils/version.js"]
   rules:
     "import/order":
       - error
