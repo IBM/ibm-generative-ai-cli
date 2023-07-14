@@ -76,13 +76,13 @@ PROFILE_PATH=$(detect_profile)
 
 if [ -n "$HAS_NVM_INSTALLED" ]; then
   echo "Installing @ibm-generative-ai/cli ..."
-  npm install --loglevel error -g @ibm-generative-ai/cli
+  npm install --loglevel error -g @ibm-generative-ai/cli@latest
 else
   INSTALL_DIR="$HOME/.genai/cli"
   mkdir -p "$INSTALL_DIR"
 
   echo "Installing @ibm-generative-ai/cli ..."
-  npm install --prefix="$INSTALL_DIR" --quiet -g @ibm-generative-ai/cli
+  npm install --prefix="$INSTALL_DIR" --quiet -g @ibm-generative-ai/cli@latest
 
   export PATH="$INSTALL_DIR/bin:$PATH"
 
