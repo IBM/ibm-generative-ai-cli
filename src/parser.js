@@ -795,7 +795,7 @@ export const parser = yargs(hideBin(process.argv))
           const { id, file_name, purpose, created_at } = await args.client.file(
             {
               purpose: args.purpose,
-              filename: args.name ?? path.parse(args.file).name,
+              filename: args.name ?? path.parse(args.file).base,
               file: createReadStream(args.file),
             }
           );
