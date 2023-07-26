@@ -8,7 +8,10 @@ import { pipeline } from "node:stream/promises";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import _ from "lodash";
-import { BaseError as BaseSDKError } from "@ibm-generative-ai/node-sdk";
+import {
+  BaseError as BaseSDKError,
+  FilePurposeSchema,
+} from "@ibm-generative-ai/node-sdk";
 
 import { parseInput } from "./utils/parsers.js";
 import { readJSONStream } from "./utils/streams.js";
@@ -736,7 +739,7 @@ export const parser = yargs(hideBin(process.argv))
             type: "array",
             description: "Filter listed by purpose",
             requiresArg: true,
-            choices: ["tune", "template", "generate"],
+            choices: FilePurposeSchema.options,
           },
         }),
         async (args) => {
@@ -781,7 +784,7 @@ export const parser = yargs(hideBin(process.argv))
                   description: "Purpose of the file",
                   requiresArg: true,
                   demandOption: true,
-                  choices: ["tune", "template", "generate"],
+                  choices: FilePurposeSchema.options,
                 },
                 name: {
                   alias: "n",
