@@ -8,12 +8,15 @@ import { pipeline } from "node:stream/promises";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import _ from "lodash";
+import dayjs from "dayjs";
 import {
   BaseError as BaseSDKError,
   FilePurposeSchema,
+  HistoryStatusSchema,
+  HistoryOriginSchema,
 } from "@ibm-generative-ai/node-sdk";
 
-import { parseInput } from "./utils/parsers.js";
+import { parseDateTime, parseInput } from "./utils/parsers.js";
 import { readJSONStream } from "./utils/streams.js";
 import { prettyPrint } from "./utils/print.js";
 import {
@@ -847,6 +850,50 @@ export const parser = yargs(hideBin(process.argv))
         }
       )
       .demandCommand(1, 1, "Please choose a command")
+  )
+  .command("history", "Show history of inference", (yargs) =>
+    yargs
+      .middleware(clientMiddleware)
+      .command(
+        "$0",
+        "Show history of inference",
+        (yargs) =>
+          yargs.options(
+            groupOptions({
+              from: {
+                type: "string",
+                requiresArg: true,
+                coerce: parseDateTime,
+                description: "Point in time to show the history from",
+              },
+              to: {
+                type: "string",
+                requiresArg: true,
+                coerce: parseDateTime,
+                description: "Point in time to show the history up to",
+              },
+              status: {
+                choices: HistoryStatusSchema.options,
+                description: "Filter history by status",
+              },
+              origin: {
+                choices: HistoryOriginSchema.options,
+                description: "Filter history by origin",
+              },
+            })
+          ),
+        async (args) => {
+          const { status, origin, from, to } = args;
+          for await (const output of args.client.history({ status, origin })) {
+            const createdAt = dayjs(output.created_at);
+            if (
+              (!from || createdAt.isAfter(from)) &&
+              (!to || createdAt.isBefore(to))
+            ) {
+              prettyPrint(output);
+            }
+          } 
+        })
   )
   .demandCommand(1, 1, "Please choose a command")
   .config(loadConfig().configuration)
