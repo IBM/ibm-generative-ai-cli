@@ -2,11 +2,16 @@ import { stdin, stdout } from "node:process";
 import { createReadStream, createWriteStream } from "node:fs";
 import { createInterface } from "node:readline";
 import { promisify } from "node:util";
+import path from "node:path";
+import { pipeline } from "node:stream/promises";
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import _ from "lodash";
-import { BaseError as BaseSDKError } from "@ibm-generative-ai/node-sdk";
+import {
+  BaseError as BaseSDKError,
+  FilePurposeSchema,
+} from "@ibm-generative-ai/node-sdk";
 
 import { parseInput } from "./utils/parsers.js";
 import { readJSONStream } from "./utils/streams.js";
@@ -718,6 +723,127 @@ export const parser = yargs(hideBin(process.argv))
               "Errors have been encountered during tokenization, see output"
             );
           }
+        }
+      )
+      .demandCommand(1, 1, "Please choose a command")
+  )
+  .command("files", "Upload and manage files", (yargs) =>
+    yargs
+      .middleware(clientMiddleware)
+      .command(
+        "list",
+        "List all files",
+        groupOptions({
+          purpose: {
+            alias: "p",
+            type: "array",
+            description: "Filter listed by purpose",
+            requiresArg: true,
+            choices: FilePurposeSchema.options,
+          },
+        }),
+        async (args) => {
+          for await (const file of args.client.files()) {
+            if (!args.purpose || args.purpose.includes(file.purpose)) {
+              console.log(`${file.id} (${file.file_name})`);
+            }
+          }
+        }
+      )
+      .command(
+        "info <id>",
+        "Show detailed information about a file",
+        (yargs) =>
+          yargs.positional("id", {
+            type: "string",
+            description: "Identifier of the file",
+          }),
+        async (args) => {
+          const { id, file_name, purpose, created_at } = await args.client.file(
+            {
+              id: args.id,
+            }
+          );
+          prettyPrint({ id, name: file_name, purpose, created_at });
+        }
+      )
+      .command(
+        "upload <file>",
+        "Upload a file",
+        (yargs) =>
+          yargs
+            .positional("file", {
+              type: "string",
+              describe: "Filepath to the file to be uploaded",
+              normalize: true,
+            })
+            .options(
+              groupOptions({
+                purpose: {
+                  alias: "p",
+                  description: "Purpose of the file",
+                  requiresArg: true,
+                  demandOption: true,
+                  choices: FilePurposeSchema.options,
+                },
+                name: {
+                  alias: "n",
+                  type: "string",
+                  description: "Name of the file",
+                  requiresArg: true,
+                },
+              })
+            ),
+        async (args) => {
+          const { id, file_name, purpose, created_at } = await args.client.file(
+            {
+              purpose: args.purpose,
+              filename: args.name ?? path.parse(args.file).base,
+              file: createReadStream(args.file),
+            }
+          );
+          prettyPrint({ id, name: file_name, purpose, created_at });
+        }
+      )
+      .command(
+        "download <id>",
+        "Download a file",
+        (yargs) =>
+          yargs
+            .positional("id", {
+              type: "string",
+              description: "Identifier of the file to download",
+            })
+            .options(
+              groupOptions({
+                output: {
+                  alias: "o",
+                  describe: "Filepath to write the file to",
+                  type: "string",
+                  normalize: true,
+                  requiresArg: true,
+                  coerce: (output) => createWriteStream(output),
+                },
+              })
+            ),
+        async (args) => {
+          const { download } = await args.client.file({
+            id: args.id,
+          });
+          const readable = await download();
+          await pipeline(readable, args.output ?? stdout);
+        }
+      )
+      .command(
+        "delete <id>",
+        "Delete a file",
+        (yargs) =>
+          yargs.positional("id", {
+            type: "string",
+            description: "Identifier of the file to be deleted",
+          }),
+        async (args) => {
+          await args.client.file({ id: args.id }, { delete: true });
         }
       )
       .demandCommand(1, 1, "Please choose a command")
