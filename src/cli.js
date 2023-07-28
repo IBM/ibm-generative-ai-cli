@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --no-warnings
 
 import { parser } from "./parser.js";
 import { isUsageError } from "./errors.js";
