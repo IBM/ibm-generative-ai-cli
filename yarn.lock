@@ -76,7 +76,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ibm-generative-ai/cli@workspace:."
   dependencies:
-    "@ibm-generative-ai/node-sdk": ^1.4.1
+    "@ibm-generative-ai/node-sdk": ^1.4.2
     dayjs: ^1.11.9
     eslint: ^8.40.0
     eslint-config-prettier: ^8.8.0
@@ -92,9 +92,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ibm-generative-ai/node-sdk@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "@ibm-generative-ai/node-sdk@npm:1.4.1"
+"@ibm-generative-ai/node-sdk@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "@ibm-generative-ai/node-sdk@npm:1.4.2"
   dependencies:
     axios: ^1.3.4
     axios-cache-interceptor: ^1.0.1
@@ -105,7 +105,7 @@ __metadata:
     zod: ^3.21.4
   peerDependencies:
     langchain: ">=0.0.75"
-  checksum: af86dc1e3aa77337a5de2b8391d719b68da1cf4f71623917f36dcbf2c568c477f0df13ddc049905c16be7a0bb46e31b2aa5a90f6204f2aa88e3cede8cd35817b
+  checksum: 7d1535cccbc25fc23199ef8fec2f36b8975b1cab578a78213fdf8d0b3d4efdaf460533197fdd80b652594a2c9bedee1f28d098f38f0393afc9c3f11a5ea3724b
   languageName: node
   linkType: hard
 
