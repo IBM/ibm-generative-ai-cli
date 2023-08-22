@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x, 18.x, 20.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v3
@@ -24,3 +23,20 @@ jobs:
           cache: "yarn"
       - run: yarn --frozen-lockfile
       - run: yarn lint
+  healthcheck:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x, 20.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - run: yarn --frozen-lockfile
+      - run: npm install -g .
+      - run: genai --version

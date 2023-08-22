@@ -1,6 +1,5 @@
 import { Client } from "@ibm-generative-ai/node-sdk";
 
-// eslint-disable-next-line import/namespace
 import { version } from "../utils/version.js";
 
 export const clientMiddleware = (args) => {
