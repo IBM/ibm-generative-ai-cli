@@ -109,8 +109,12 @@ if command genai --version 2>/dev/null ; then
     echo "To uninstall GenAI run following commands:"
     echo "npm uninstall -g --prefix=\"$INSTALL_DIR\" @ibm-generative-ai/cli"
     echo "sed -i -e '/# GenAI CLI/{N;d;}' \"$PROFILE_PATH\""
+    echo ""
   fi
+
+  echo "To enable completion run \"genai completion\" for further instructions"
   echo ""
+
   echo "Done!"
   echo ""
   if [ -z "$PROFILE_PATH" ]; then
@@ -122,4 +126,3 @@ else
     echo "";
     echo "Failure, make sure your PATH is set up correctly"
 fi
-
