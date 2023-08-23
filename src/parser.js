@@ -1119,4 +1119,12 @@ export const parser = yargs(hideBin(process.argv))
   .demandCommand(1, 1, "Please choose a command")
   .config(loadConfig().configuration)
   .strict()
-  .fail(false);
+  .fail(false)
+  .completion('completion', "Generate completion script", (current, argv, completionFilter, done) => {
+    completionFilter((err, defaultCompletions) => {
+      const filteredCompletions = defaultCompletions
+        .filter(completion => !completion.startsWith("$0"))
+        .filter(completion => !completion.startsWith("completion"))
+      done(filteredCompletions)
+    })
+  });
