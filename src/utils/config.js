@@ -4,19 +4,71 @@ import fs, { writeFileSync } from "fs";
 
 import YAML from "yaml";
 import _ from "lodash";
+import { z } from "zod";
 
 const CONFIG_DIR_PATH = path.join(os.homedir(), ".genai");
 const CONFIG_PATH = path.join(CONFIG_DIR_PATH, "configuration.yml");
 // Credentials and their storage are defined by the Node SDK. Currently, the SDK doesn't expose any utilities to manage them.
 const CREDENTIALS_PATH = path.join(CONFIG_DIR_PATH, "credentials.yml");
 
+const configurationSchema = z
+  .object({
+    endpoint: z.string(), // default profile
+    profiles: z.record(
+      z
+        .object({
+          endpoint: z.string(),
+        })
+        .partial()
+    ),
+  })
+  .partial();
+
+const credentialsSchema = z
+  .object({
+    apiKey: z.string(), // default profile
+    profiles: z.record(
+      z
+        .object({
+          apiKey: z.string(),
+        })
+        .partial()
+    ),
+  })
+  .partial();
+
+const parseYamlFromFile = (path) =>
+  fs.existsSync(path) ? YAML.parse(fs.readFileSync(path, "utf8")) : {};
+
+let cachedConfig = null;
 export const loadConfig = () => {
-  const parseYamlFromFile = (path) =>
-    fs.existsSync(path) ? YAML.parse(fs.readFileSync(path, "utf8")) : {};
-  return {
-    configuration: parseYamlFromFile(CONFIG_PATH),
-    credentials: parseYamlFromFile(CREDENTIALS_PATH),
-  };
+  if (cachedConfig) return cachedConfig;
+  cachedConfig = {};
+  try {
+    cachedConfig.configuration = configurationSchema.parse(
+      parseYamlFromFile(CONFIG_PATH)
+    );
+  } catch (err) {
+    cachedConfig = null;
+    throw new Error(
+      `Failed to load the configuration, patch or remove ${CONFIG_PATH}\nDetails: ${YAML.stringify(
+        err.format()
+      )}`
+    );
+  }
+  try {
+    cachedConfig.credentials = credentialsSchema.parse(
+      parseYamlFromFile(CREDENTIALS_PATH)
+    );
+  } catch (err) {
+    cachedConfig = null;
+    throw new Error(
+      `Failed to load credentials, patch or remove ${CREDENTIALS_PATH}\nDetails: ${YAML.stringify(
+        err.format()
+      )}`
+    );
+  }
+  return cachedConfig;
 };
 
 export const storeConfig = (config) => {
@@ -25,9 +77,21 @@ export const storeConfig = (config) => {
   }
   writeFileSync(CONFIG_PATH, YAML.stringify(config.configuration ?? {}));
   writeFileSync(CREDENTIALS_PATH, YAML.stringify(config.credentials ?? {}));
+  cachedConfig = config;
 };
 
 export const mergeConfig = (config) => {
   const currentConfig = loadConfig();
   storeConfig(_.merge({}, currentConfig, config));
+};
+
+export const loadYargsConfig = () => {
+  const {
+    configuration: { profiles: _, ...configuration },
+    credentials: { profiles: __, ...credentials },
+  } = loadConfig();
+  return {
+    ...configuration,
+    ...credentials,
+  };
 };

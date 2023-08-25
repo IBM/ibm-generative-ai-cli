@@ -28,6 +28,7 @@ import {
 import { groupOptions } from "./utils/yargs.js";
 import { loadConfig, mergeConfig, storeConfig } from "./utils/config.js";
 import { clientMiddleware } from "./middleware/client.js";
+import { profileMiddleware } from "./middleware/profile.js";
 
 export const parser = yargs(hideBin(process.argv))
   .options({
@@ -50,7 +51,13 @@ export const parser = yargs(hideBin(process.argv))
       type: "number",
       defaultDescription: "none",
     },
+    profile: {
+      describe: "Use a specific profile from your configuration",
+      requiresArg: true,
+      type: "string",
+    },
   })
+  .middleware(profileMiddleware)
   .help()
   .alias("h", "help")
   .updateStrings({ "Options:": "Global Options:" })
@@ -88,13 +95,26 @@ export const parser = yargs(hideBin(process.argv))
           configuration: {},
           credentials: {},
         };
+        const profile = await question("Profile (leave empty for default): ");
+        if (profile) {
+          config.configuration.profiles = { [profile]: {} };
+          config.credentials.profiles = { [profile]: {} };
+        }
         const endpoint = await question("Endpoint (leave empty to skip): ");
         if (endpoint) {
-          config.configuration.endpoint = endpoint;
+          if (profile) {
+            config.configuration.profiles[profile].endpoint = endpoint;
+          } else {
+            config.configuration.endpoint = endpoint;
+          }
         }
         const apiKey = await question("API Key (leave empty to skip): ");
         if (apiKey) {
-          config.credentials.apiKey = apiKey;
+          if (profile) {
+            config.credentials.profiles[profile].apiKey = apiKey;
+          } else {
+            config.credentials.apiKey = apiKey;
+          }
         }
 
         rl.close();
@@ -1117,14 +1137,17 @@ export const parser = yargs(hideBin(process.argv))
       .demandCommand(1, 1, "Please choose a command")
   )
   .demandCommand(1, 1, "Please choose a command")
-  .config(loadConfig().configuration)
   .strict()
   .fail(false)
-  .completion('completion', "Generate completion script", (current, argv, completionFilter, done) => {
-    completionFilter((err, defaultCompletions) => {
-      const filteredCompletions = defaultCompletions
-        .filter(completion => !completion.startsWith("$0"))
-        .filter(completion => !completion.startsWith("completion"))
-      done(filteredCompletions)
-    })
-  });
+  .completion(
+    "completion",
+    "Generate completion script",
+    (current, argv, completionFilter, done) => {
+      completionFilter((err, defaultCompletions) => {
+        const filteredCompletions = defaultCompletions
+          .filter((completion) => !completion.startsWith("$0"))
+          .filter((completion) => !completion.startsWith("completion"));
+        done(filteredCompletions);
+      });
+    }
+  );
