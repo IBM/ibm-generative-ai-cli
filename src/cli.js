@@ -2,9 +2,10 @@
 
 import { parser } from "./parser.js";
 import { isUsageError } from "./errors.js";
+import { loadYargsConfig } from "./utils/config.js";
 
 try {
-  await parser.parse();
+  await parser.config(loadYargsConfig()).parse();
 } catch (err) {
   if (isUsageError(err)) {
     parser.showHelp();
