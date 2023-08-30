@@ -85,13 +85,42 @@ export const mergeConfig = (config) => {
   storeConfig(_.merge({}, currentConfig, config));
 };
 
-export const loadYargsConfig = () => {
-  const {
-    configuration: { profiles: _, ...configuration },
-    credentials: { profiles: __, ...credentials },
-  } = loadConfig();
-  return {
+export const loadProfileConfig = (profile) => {
+  const { configuration, credentials } = loadConfig();
+  const profileConfig = {
     ...configuration,
+    ...(profile && configuration.profiles && configuration.profiles[profile]),
     ...credentials,
+    ...(profile && credentials.profiles && credentials.profiles[profile]),
   };
+  delete profileConfig.profiles;
+  return profileConfig;
+};
+
+export const deleteProfileConfig = (profile) => {
+  const config = _.cloneDeep(loadConfig());
+  if (profile) {
+    [config.configuration.profiles, config.credentials.profiles].forEach(
+      (profiles) => {
+        if (profiles) {
+          delete profiles[profile];
+        }
+      }
+    );
+    storeConfig(config);
+  } else {
+    storeConfig({
+      configuration: _.pick(config.configuration, "profiles"),
+      credentials: _.pick(config.credentials, "profiles"),
+    });
+  }
+};
+
+export const allProfiles = () => {
+  const config = loadConfig();
+  Object.keys(config.configuration.profiles ?? {});
+  return Object.keys({
+    ...config.configuration.profiles,
+    ...config.credentials.profiles,
+  });
 };
