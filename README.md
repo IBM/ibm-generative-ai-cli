@@ -43,7 +43,7 @@ The CLI is distributed as an [npm](https://www.npmjs.com/package/@ibm-generative
 Preferred way of installing the CLI is the install script. If NodeJS is not detected, it is installed via [nvm](https://github.com/nvm-sh/nvm).
 
 ```bash
-source <(curl -sSL https://raw.githubusercontent.com/IBM/ibm-generative-ai-cli/main/install.sh) 
+source <(curl -sSL https://raw.githubusercontent.com/IBM/ibm-generative-ai-cli/main/install.sh)
 ```
 
 ```bash
@@ -65,6 +65,14 @@ Create default configuration:
 ```bash
 genai config
 ```
+
+One can also create profile-specific configuration:
+
+```bash
+genai --profile joe config
+```
+
+All the commands executed with `--profile joe` argument will use that configuration (and default as a fallback).
 
 ## Usage
 
