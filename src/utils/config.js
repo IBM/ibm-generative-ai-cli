@@ -85,7 +85,7 @@ export const mergeConfig = (config) => {
   storeConfig(_.merge({}, currentConfig, config));
 };
 
-export const loadProfileConfig = (profile) => {
+export function loadProfileConfig(profile) {
   const { configuration, credentials } = loadConfig();
   const profileConfig = {
     ...configuration,
@@ -95,9 +95,9 @@ export const loadProfileConfig = (profile) => {
   };
   delete profileConfig.profiles;
   return profileConfig;
-};
+}
 
-export const deleteProfileConfig = (profile) => {
+export function deleteProfileConfig(profile) {
   const config = _.cloneDeep(loadConfig());
   if (profile) {
     [config.configuration.profiles, config.credentials.profiles].forEach(
@@ -114,13 +114,12 @@ export const deleteProfileConfig = (profile) => {
       credentials: _.pick(config.credentials, "profiles"),
     });
   }
-};
+}
 
-export const allProfiles = () => {
+export function allProfiles() {
   const config = loadConfig();
-  Object.keys(config.configuration.profiles ?? {});
   return Object.keys({
     ...config.configuration.profiles,
     ...config.credentials.profiles,
   });
-};
+}

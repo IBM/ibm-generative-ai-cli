@@ -1,1 +1,1 @@
-export const DEFAULT_ENDPOINT = "https://workbench-api.res.ibm.com"
+export const DEFAULT_ENDPOINT = "https://workbench-api.res.ibm.com";
