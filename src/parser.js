@@ -26,9 +26,15 @@ import {
   isCancelOperationKey,
 } from "./utils/common.js";
 import { groupOptions } from "./utils/yargs.js";
-import { loadConfig, mergeConfig, storeConfig } from "./utils/config.js";
+import {
+  loadProfileConfig,
+  mergeConfig,
+  deleteProfileConfig,
+  allProfiles,
+} from "./utils/config.js";
 import { clientMiddleware } from "./middleware/client.js";
 import { profileMiddleware } from "./middleware/profile.js";
+import { DEFAULT_ENDPOINT } from "./utils/constants.js";
 
 export const parser = yargs(hideBin(process.argv))
   .options({
@@ -61,27 +67,9 @@ export const parser = yargs(hideBin(process.argv))
   .help()
   .alias("h", "help")
   .updateStrings({ "Options:": "Global Options:" })
-  .command(
-    "config",
-    "Modify the CLI configuration using an interactive prompt",
-    (yargs) =>
-      yargs.options(
-        groupOptions({
-          show: {
-            describe: "Only show the config, do not prompt",
-            type: "boolean",
-          },
-          reset: {
-            describe: "Reset the config",
-            type: "boolean",
-            conflicts: ["show"],
-          },
-        })
-      ),
-    async (args) => {
-      if (args.reset) {
-        storeConfig({});
-      } else if (!args.show) {
+  .command("config", "Manage CLI configuration", (yargs) =>
+    yargs
+      .command("$0", "Modify configuration", {}, async (args) => {
         const rl = createInterface({
           input: stdin,
           output: stdout,
@@ -95,23 +83,27 @@ export const parser = yargs(hideBin(process.argv))
           configuration: {},
           credentials: {},
         };
-        const profile = await question("Profile (leave empty for default): ");
-        if (profile) {
-          config.configuration.profiles = { [profile]: {} };
-          config.credentials.profiles = { [profile]: {} };
+        if (args.profile) {
+          config.configuration.profiles = { [args.profile]: {} };
+          config.credentials.profiles = { [args.profile]: {} };
         }
-        const endpoint = await question("Endpoint (leave empty to skip): ");
+
+        const endpoint = await question(
+          `Endpoint (${
+            args.endpoint ?? process.env.GENAI_ENDPOINT ?? DEFAULT_ENDPOINT
+          }): `
+        );
         if (endpoint) {
-          if (profile) {
-            config.configuration.profiles[profile].endpoint = endpoint;
+          if (args.profile) {
+            config.configuration.profiles[args.profile].endpoint = endpoint;
           } else {
             config.configuration.endpoint = endpoint;
           }
         }
-        const apiKey = await question("API Key (leave empty to skip): ");
+        const apiKey = await question(`API Key (${args.apiKey ?? "none"}): `);
         if (apiKey) {
-          if (profile) {
-            config.credentials.profiles[profile].apiKey = apiKey;
+          if (args.profile) {
+            config.credentials.profiles[args.profile].apiKey = apiKey;
           } else {
             config.credentials.apiKey = apiKey;
           }
@@ -119,11 +111,20 @@ export const parser = yargs(hideBin(process.argv))
 
         rl.close();
         mergeConfig(config);
-      }
-
-      const config = loadConfig();
-      prettyPrint(config);
-    }
+      })
+      .command("show", "Show configuration", {}, (args) => {
+        const config = loadProfileConfig(args.profile);
+        prettyPrint(config);
+      })
+      .command("profiles", "List configuration profiles", {}, (args) => {
+        const profiles = allProfiles();
+        profiles.forEach((profile) => {
+          console.log(profile);
+        });
+      })
+      .command("remove", "Remove configuration", {}, (args) => {
+        deleteProfileConfig(args.profile);
+      })
   )
   .command("generate", "Generate a text from an input text", (yargs) =>
     yargs
