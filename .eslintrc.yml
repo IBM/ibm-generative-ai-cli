@@ -14,3 +14,7 @@ rules:
   "import/order":
     - error
     - newlines-between: always
+  "import/extensions":
+    - error
+    - ignorePackages
+    - js: always
