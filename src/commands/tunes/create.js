@@ -1,4 +1,4 @@
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty.js";
 
 import { pickDefined } from "../../utils/common.js";
 import { groupOptions } from "../../utils/yargs.js";
@@ -127,7 +127,7 @@ export const createCommandDefinition = [
           num_virtual_tokens: args.numVirtualTokens,
           verbalizer: args.verbalizer,
         });
-        args.parameters = !_.isEmpty(parameters) ? parameters : undefined;
+        args.parameters = !isEmpty(parameters) ? parameters : undefined;
       }),
   async (args) => {
     const { id, name } = await args.client.tune({

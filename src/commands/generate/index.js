@@ -1,4 +1,4 @@
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty.js";
 
 import { clientMiddleware } from "../../middleware/client.js";
 import { pickDefined } from "../../utils/common.js";
@@ -132,9 +132,7 @@ export const generateCommandDefinition = [
         });
         const parameters = pickDefined({
           decoding_method: args.decodingMethod,
-          length_penalty: !_.isEmpty(length_penalty)
-            ? length_penalty
-            : undefined,
+          length_penalty: !isEmpty(length_penalty) ? length_penalty : undefined,
           max_new_tokens: args.maxNewTokens,
           min_new_tokens: args.minNewTokens,
           random_seed: args.randomSeed,
@@ -147,7 +145,7 @@ export const generateCommandDefinition = [
           truncate_input_tokens: args.truncateInputTokens,
           stream: args.stream,
         });
-        args.parameters = !_.isEmpty(parameters) ? parameters : undefined;
+        args.parameters = !isEmpty(parameters) ? parameters : undefined;
       })
       .command(...defaultCommandDefinition)
       .command(...interactiveCommandDefinition)

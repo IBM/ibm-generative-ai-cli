@@ -1,6 +1,6 @@
-import _ from "lodash";
+import pickBy from "lodash/pickBy.js";
 
-export const pickDefined = (obj) => _.pickBy(obj, (v) => v !== undefined);
+export const pickDefined = (obj) => pickBy(obj, (v) => v !== undefined);
 
 export const isAbortError = (err) => Boolean(err && err.name === "AbortError");
 

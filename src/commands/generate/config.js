@@ -1,4 +1,5 @@
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty.js";
+import merge from "lodash/merge.js";
 
 import { pickDefined } from "../../utils/common.js";
 import { prettyPrint } from "../../utils/print.js";
@@ -52,8 +53,8 @@ export const configCommandDefinition = [
           input_ranks: args.tokenRanks,
           top_n_tokens: args.topNTokens,
         });
-        args.parameters = !_.isEmpty(return_options)
-          ? _.merge({}, args.parameters, { return_options })
+        args.parameters = !isEmpty(return_options)
+          ? merge({}, args.parameters, { return_options })
           : args.parameters;
       })
       .options(

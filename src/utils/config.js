@@ -3,7 +3,9 @@ import path from "path";
 import fs, { writeFileSync } from "fs";
 
 import YAML from "yaml";
-import _ from "lodash";
+import pick from "lodash/pick.js";
+import merge from "lodash/merge.js";
+import cloneDeep from "lodash/cloneDeep.js";
 import { z } from "zod";
 
 const CONFIG_DIR_PATH = path.join(os.homedir(), ".genai");
@@ -82,7 +84,7 @@ export const storeConfig = (config) => {
 
 export const mergeConfig = (config) => {
   const currentConfig = loadConfig();
-  storeConfig(_.merge({}, currentConfig, config));
+  storeConfig(merge({}, currentConfig, config));
 };
 
 export function loadProfileConfig(profile) {
@@ -98,7 +100,7 @@ export function loadProfileConfig(profile) {
 }
 
 export function deleteProfileConfig(profile) {
-  const config = _.cloneDeep(loadConfig());
+  const config = cloneDeep(loadConfig());
   if (profile) {
     [config.configuration.profiles, config.credentials.profiles].forEach(
       (profiles) => {
@@ -110,8 +112,8 @@ export function deleteProfileConfig(profile) {
     storeConfig(config);
   } else {
     storeConfig({
-      configuration: _.pick(config.configuration, "profiles"),
-      credentials: _.pick(config.credentials, "profiles"),
+      configuration: pick(config.configuration, "profiles"),
+      credentials: pick(config.credentials, "profiles"),
     });
   }
 }
