@@ -104,7 +104,7 @@ export const createCommandDefinition = [
               default: 100,
               description: "Number of virtual tokens to be used for training",
             },
-            verbalizer: {
+            "verbalizer": {
               type: "string",
               requiresArg: true,
               description:

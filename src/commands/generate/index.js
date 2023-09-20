@@ -17,7 +17,7 @@ export const generateCommandDefinition = [
       .options(
         groupOptions(
           {
-            model: {
+            "model": {
               alias: "m",
               describe: "Select a model to be used for generation",
               requiresArg: true,
@@ -28,7 +28,7 @@ export const generateCommandDefinition = [
                 return parameters;
               },
             },
-            stream: {
+            "stream": {
               type: "boolean",
               description:
                 "Enables to stream partial progress as server-sent events.",
@@ -80,7 +80,7 @@ export const generateCommandDefinition = [
               description:
                 "One or more strings which will cause the text generation to stop if detected in the output",
             },
-            temperature: {
+            "temperature": {
               type: "number",
               requiresArg: true,
               nargs: 1,
