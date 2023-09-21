@@ -2,12 +2,19 @@ import { createInterface } from "node:readline";
 import { stdin, stdout } from "node:process";
 import { promisify } from "node:util";
 
-import { isAbortError, isCancelOperationKey } from "../../utils/common.js";
+import { isAbortError, isCancelOperationKey } from "../../../utils/common.js";
 
 export const interactiveCommandDefinition = [
   "interactive",
-  "Interactive context-free generate session",
-  {},
+  "Talk",
+  (yargs) =>
+    yargs.options({
+      system: {
+        alias: "s",
+        type: "string",
+        requiresArg: true,
+      },
+    }),
   async (args) => {
     if (args.parameters?.stream === false) {
       throw new Error("Stream is automatically enabled for interactive mode.");
@@ -57,23 +64,30 @@ export const interactiveCommandDefinition = [
         }
       });
 
+    const controller = new AbortController();
+    ctx.abortOperation = () => controller.abort();
+    const question = promisify(rl.question).bind(rl);
+
+    let conversation_id = args.conversation;
     while (!ctx.isTerminated) {
       ctx.isProcessing = false;
 
       try {
-        const controller = new AbortController();
-        ctx.abortOperation = () => controller.abort();
-
-        const question = promisify(rl.question).bind(rl);
-        const input = await question("GenAI> ", controller);
+        const input = await question("User> ", controller);
 
         ctx.isProcessing = true;
         if (input.length > 0) {
-          const stream = args.client.generate(
+          const stream = args.client.chat(
             {
-              input: input,
+              messages: [
+                {
+                  role: "user",
+                  content: input,
+                },
+              ],
               model_id: args.model ?? "default",
               parameters: args.parameters,
+              conversation_id,
             },
             {
               timeout: args.timeout,
@@ -83,7 +97,8 @@ export const interactiveCommandDefinition = [
           );
 
           for await (const chunk of stream) {
-            rl.write(chunk.generated_text);
+            conversation_id = chunk.conversation_id;
+            rl.write(chunk.result.generated_text);
           }
           rl.write("\n");
         }

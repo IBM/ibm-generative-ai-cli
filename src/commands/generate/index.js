@@ -4,7 +4,7 @@ import { clientMiddleware } from "../../middleware/client.js";
 import { pickDefined } from "../../utils/common.js";
 import { groupOptions } from "../../utils/yargs.js";
 
-import { interactiveCommandDefinition } from "./interactive.js";
+import { chatCommandDefinition } from "./chat/index.js";
 import { configCommandDefinition } from "./config.js";
 import { defaultCommandDefinition } from "./default.js";
 
@@ -148,7 +148,7 @@ export const generateCommandDefinition = [
         args.parameters = !isEmpty(parameters) ? parameters : undefined;
       })
       .command(...defaultCommandDefinition)
-      .command(...interactiveCommandDefinition)
+      .command(...chatCommandDefinition)
       .command(...configCommandDefinition)
       .example('$0 generate "Hello World"', "Supply single input")
       .example("$0 generate -f inputs.jsonl", "Supply JSONL file with inputs")
