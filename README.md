@@ -1,15 +1,14 @@
-<div align="center">
+# IBM Generative AI CLI (Tech Preview)
 
-# Generative AI CLI
+This is not the [watsonx.ai](https://www.ibm.com/products/watsonx-ai) CLI. This is the CLI for the Tech Preview program for IBM Foundation Models Studio.
+You can start a trial version or request a demo via https://www.ibm.com/products/watsonx-ai.
 
-This project provides convenient access to the Generative AI API from from the command line. For a full description of the API, please visit the [Generative AI API Docs](https://workbench.res.ibm.com/docs/api-reference).
+This project provides convenient access to the Generative AI API from the command line. For a full description of the API, please visit the [Generative AI API Documentation](https://workbench.res.ibm.com/docs/api-reference).
 
 ![demo](./assets/img/demo.gif)
 
 _Are you looking for an SDK?<br>
 If so, check out the [NodeJS SDK](https://github.com/IBM/ibm-generative-ai-node-sdk) and [Python SDK](https://github.com/IBM/ibm-generative-ai)._
-
-</div>
 
 ![-----------------------------------------------------](./assets/img/rainbow.png)
 
