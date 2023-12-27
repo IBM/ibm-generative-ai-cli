@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 
 import { parseDateTime } from "../../utils/parsers.js";
 import { groupOptions } from "../../utils/yargs.js";
-import { prettyPrint } from "../../utils/print.js";
 
 export const defaultCommandDefinition = [
   "$0",
@@ -44,7 +43,7 @@ export const defaultCommandDefinition = [
         (!from || createdAt.isAfter(from)) &&
         (!to || createdAt.isBefore(to))
       ) {
-        prettyPrint(output);
+        args.print(output);
       }
     }
   },

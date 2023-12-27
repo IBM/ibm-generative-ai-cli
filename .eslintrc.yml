@@ -8,7 +8,7 @@ extends:
 plugins:
   - import
 parserOptions:
-  ecmaVersion: "latest"
+  ecmaVersion: 14
   sourceType: "module"
 rules:
   "import/order":

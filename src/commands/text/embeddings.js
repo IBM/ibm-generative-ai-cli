@@ -8,9 +8,9 @@ import { parseInput } from "../../utils/parsers.js";
 import { readJSONStream } from "../../utils/streams.js";
 import { groupOptions } from "../../utils/yargs.js";
 
-export const defaultCommandDefinition = [
-  "$0 [inputs..]",
-  "Convert provided inputs to tokens. Tokenization is model specific.",
+export const embeddingsCommandDefinition = [
+  "embeddings [inputs..]",
+  "Converts the provided inputs to embeddings",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
@@ -19,7 +19,7 @@ export const defaultCommandDefinition = [
           {
             model: {
               alias: "m",
-              describe: "Select a model to be used for generation",
+              describe: "Select a model to be used for embeddings",
               requiresArg: true,
               type: "string",
               coerce: (parameters) => {
@@ -27,11 +27,6 @@ export const defaultCommandDefinition = [
                   throw new Error("Only a single model must be specified");
                 return parameters;
               },
-            },
-            returnTokens: {
-              type: "boolean",
-              default: true,
-              description: "Return tokens with the response. Defaults to true.",
             },
           },
           "Configuration:"
@@ -93,7 +88,7 @@ export const defaultCommandDefinition = [
             input,
           },
           {
-            timeout: args.timeout,
+            signal: AbortSignal.timeout(args.timeout),
           }
         );
         return { token_count, tokens };

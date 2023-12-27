@@ -1,5 +1,3 @@
-import { prettyPrint } from "../../utils/print.js";
-
 export const infoCommandDefinition = [
   "info <id>",
   "Show detailed information about a file",
@@ -9,9 +7,9 @@ export const infoCommandDefinition = [
       description: "Identifier of the file",
     }),
   async (args) => {
-    const { id, file_name, purpose, created_at } = await args.client.file({
+    const file = await args.client.file({
       id: args.id,
     });
-    prettyPrint({ id, name: file_name, purpose, created_at });
+    args.print(file);
   },
 ];

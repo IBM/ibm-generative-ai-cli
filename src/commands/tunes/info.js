@@ -1,5 +1,3 @@
-import { prettyPrint } from "../../utils/print.js";
-
 export const infoCommandDefinition = [
   "info <id>",
   "Show detailed information about a tuned model",
@@ -12,6 +10,6 @@ export const infoCommandDefinition = [
     const { id, name } = await args.client.tune({
       id: args.id,
     });
-    prettyPrint({ id, name });
+    args.print({ id, name });
   },
 ];

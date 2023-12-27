@@ -1,16 +1,14 @@
 import isEmpty from "lodash/isEmpty.js";
 
-import { clientMiddleware } from "../../middleware/client.js";
-import { pickDefined } from "../../utils/common.js";
-import { groupOptions } from "../../utils/yargs.js";
+import { clientMiddleware } from "../../../middleware/client.js";
+import { pickDefined } from "../../../utils/common.js";
+import { groupOptions } from "../../../utils/yargs.js";
 
-import { interactiveCommandDefinition } from "./interactive.js";
-import { configCommandDefinition } from "./config.js";
 import { defaultCommandDefinition } from "./default.js";
 
-export const generateCommandDefinition = [
-  "generate",
-  "Generate a text from an input text",
+export const generationCommandDefinition = [
+  "generation",
+  "Commands for text generation",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
@@ -27,11 +25,6 @@ export const generateCommandDefinition = [
                   throw new Error("Only a single model must be specified");
                 return parameters;
               },
-            },
-            "stream": {
-              type: "boolean",
-              description:
-                "Enables to stream partial progress as server-sent events.",
             },
             "decoding-method": {
               type: "string",
@@ -148,13 +141,7 @@ export const generateCommandDefinition = [
         args.parameters = !isEmpty(parameters) ? parameters : undefined;
       })
       .command(...defaultCommandDefinition)
-      .command(...interactiveCommandDefinition)
-      .command(...configCommandDefinition)
-      .example('$0 generate "Hello World"', "Supply single input")
-      .example("$0 generate -f inputs.jsonl", "Supply JSONL file with inputs")
-      .example(
-        "$0 generate config -m google/flan-t5-xxl --random-seed 2",
-        "Modify generate configuration with a given model and parameters"
-      )
+      .example('$0 generation "Hello World"', "Supply single input")
+      .example("$0 generation -f inputs.jsonl", "Supply JSONL file with inputs")
       .demandCommand(1, 1, "Please choose a command"),
 ];

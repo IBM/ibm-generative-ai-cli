@@ -8,7 +8,7 @@ import { uploadCommandDefinition } from "./upload.js";
 
 export const filesCommandDefinition = [
   "files",
-  "Upload and manage files",
+  "Upload, download and manage files",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)

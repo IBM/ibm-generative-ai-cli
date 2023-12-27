@@ -3,9 +3,9 @@ import { stdin, stdout } from "node:process";
 
 import { BaseError as BaseSDKError } from "@ibm-generative-ai/node-sdk";
 
-import { readJSONStream } from "../../utils/streams.js";
-import { groupOptions } from "../../utils/yargs.js";
-import { parseInput } from "../../utils/parsers.js";
+import { readJSONStream } from "../../../utils/streams.js";
+import { groupOptions } from "../../../utils/yargs.js";
+import { parseInput } from "../../../utils/parsers.js";
 
 export const defaultCommandDefinition = [
   ["$0 [inputs..]"], // Default subcommand for generate command
@@ -67,7 +67,7 @@ export const defaultCommandDefinition = [
     if (args.parameters?.stream) {
       try {
         for await (const chunk of args.client.generate(mappedInputs, {
-          timeout: args.timeout,
+          signal: AbortSignal.timeout(args.timeout),
           stream: true,
         })) {
           outputStream.write(chunk.generated_text);
@@ -80,7 +80,7 @@ export const defaultCommandDefinition = [
       }
     } else {
       for (const promise of args.client.generate(mappedInputs, {
-        timeout: args.timeout,
+        signal: AbortSignal.timeout(args.timeout),
       })) {
         try {
           const output = await promise;

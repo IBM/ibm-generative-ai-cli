@@ -5,7 +5,7 @@ import { deleteCommandDefinition } from "./delete.js";
 import { downloadCommandDefiniton } from "./download.js";
 import { infoCommandDefinition } from "./info.js";
 import { listCommandDefinition } from "./list.js";
-import { methodsCommandDefinition } from "./methods.js";
+import { typesCommandDefinition } from "./types.js";
 
 export const tunesCommandDefinition = [
   "tunes",
@@ -13,7 +13,7 @@ export const tunesCommandDefinition = [
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
-      .command(...methodsCommandDefinition)
+      .command(...typesCommandDefinition)
       .command(...listCommandDefinition)
       .command(...infoCommandDefinition)
       .command(...createCommandDefinition)

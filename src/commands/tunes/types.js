@@ -1,6 +1,6 @@
-export const methodsCommandDefinition = [
-  "methods",
-  "List all tune methods",
+export const typesCommandDefinition = [
+  "types",
+  "List all tune types",
   {},
   async (args) => {
     const methods = await args.client.tuneMethods();

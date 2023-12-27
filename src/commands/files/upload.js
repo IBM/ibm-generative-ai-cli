@@ -4,7 +4,6 @@ import path from "node:path";
 import { FilePurposeSchema } from "@ibm-generative-ai/node-sdk";
 
 import { groupOptions } from "../../utils/yargs.js";
-import { prettyPrint } from "../../utils/print.js";
 
 export const uploadCommandDefinition = [
   "upload <file>",
@@ -39,6 +38,6 @@ export const uploadCommandDefinition = [
       filename: args.name ?? path.parse(args.file).base,
       file: createReadStream(args.file),
     });
-    prettyPrint({ id, name: file_name, purpose, created_at });
+    args.print({ id, name: file_name, purpose, created_at });
   },
 ];

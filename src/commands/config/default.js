@@ -4,6 +4,7 @@ import { promisify } from "node:util";
 
 import { DEFAULT_ENDPOINT } from "../../utils/constants.js";
 import { mergeConfig } from "../../utils/config.js";
+import { isValidFormat } from "../../utils/formatters.js";
 
 export const defaultCommandDefinition = [
   "$0",
@@ -46,6 +47,19 @@ export const defaultCommandDefinition = [
         config.credentials.profiles[args.profile].apiKey = apiKey;
       } else {
         config.credentials.apiKey = apiKey;
+      }
+    }
+    const outputFormat = await question(
+      `Default output format [choices: "json", "yaml"] (${
+        args.outputFormat ?? "none"
+      }): `
+    );
+    if (outputFormat && isValidFormat(outputFormat)) {
+      if (args.profile) {
+        config.configuration.profiles[args.profile]["output-format"] =
+          outputFormat;
+      } else {
+        config.configuration["output-format"] = outputFormat;
       }
     }
 

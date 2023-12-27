@@ -1,5 +1,4 @@
 import { loadProfileConfig } from "../../utils/config.js";
-import { prettyPrint } from "../../utils/print.js";
 
 export const showCommandDefinition = [
   "show",
@@ -7,6 +6,6 @@ export const showCommandDefinition = [
   {},
   (args) => {
     const config = loadProfileConfig(args.profile);
-    prettyPrint(config);
+    args.print(config);
   },
 ];

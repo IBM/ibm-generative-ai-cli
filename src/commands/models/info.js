@@ -1,5 +1,3 @@
-import { prettyPrint } from "../../utils/print.js";
-
 export const infoCommandDefinition = [
   "info <model>",
   "Show detailed information about a model",
@@ -21,7 +19,7 @@ export const infoCommandDefinition = [
       tags,
     } = await args.client.model({ id: args.model });
 
-    prettyPrint({
+    args.print({
       id,
       name,
       size,
