@@ -5,6 +5,7 @@ import { pickDefined } from "../../../utils/common.js";
 import { groupOptions } from "../../../utils/yargs.js";
 
 import { createCommandDefinition } from "./create.js";
+import { createStreamCommandDefinition } from "./create_stream.js";
 
 export const generationCommandDefinition = [
   "generation",
@@ -142,5 +143,6 @@ export const generationCommandDefinition = [
         args.parameters = !isEmpty(parameters) ? parameters : undefined;
       })
       .command(...createCommandDefinition)
+      .command(...createStreamCommandDefinition)
       .demandCommand(1, 1, "Please choose a command"),
 ];
