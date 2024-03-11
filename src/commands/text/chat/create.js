@@ -1,10 +1,12 @@
 import { groupOptions } from "../../../utils/yargs.js";
+import { clientMiddleware } from "../../../middleware/client.js";
 
 export const createCommandDefinition = [
   ["create <message>"],
   "Have conversation with a model",
   (yargs) =>
     yargs
+      .middleware(clientMiddleware)
       .options(
         groupOptions({
           model: {
@@ -37,19 +39,19 @@ export const createCommandDefinition = [
         array: true,
       }),
   async (args) => {
-    const input = args.message;
-
-    const response = await args.client.text.chat(
+    const { model, message } = args;
+    const output = await args.client.text.chat.create(
       {
+        model_id: model,
         messages: [
           {
             role: args.role,
-            content: input,
+            content: message,
           },
         ],
       },
-      { signal: AbortSignal.timeout(args.timeout) }
+      { signal: args.timeout }
     );
-    args.print(response);
+    args.print(output);
   },
 ];
