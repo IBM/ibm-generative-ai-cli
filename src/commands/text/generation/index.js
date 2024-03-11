@@ -18,6 +18,7 @@ export const generationCommandDefinition = [
             "model": {
               alias: "m",
               describe: "Select a model to be used for generation",
+              demandOption: true,
               requiresArg: true,
               type: "string",
               coerce: (parameters) => {
