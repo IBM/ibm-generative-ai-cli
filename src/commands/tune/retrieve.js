@@ -8,9 +8,12 @@ export const retrieveCommandDefinition = [
     }),
   async (args) => {
     const { id } = args;
-    const { result } = await args.client.tune.retrieve({
-      id,
-    });
+    const { result } = await args.client.tune.retrieve(
+      {
+        id,
+      },
+      { signal: args.timeout }
+    );
     args.print(result);
   },
 ];

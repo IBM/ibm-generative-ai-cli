@@ -31,13 +31,16 @@ export const createCommandDefinition = [
       ),
   async (args) => {
     const { purpose, name, file } = args;
-    const { result } = await args.client.file.create({
-      purpose,
-      file: {
-        name: name ?? path.parse(file).base,
-        content: new Blob(await createReadStream(file).toArray()),
+    const { result } = await args.client.file.create(
+      {
+        purpose,
+        file: {
+          name: name ?? path.parse(file).base,
+          content: new Blob(await createReadStream(file).toArray()),
+        },
       },
-    });
+      { signal: args.timeout }
+    );
     args.print(result);
   },
 ];

@@ -27,9 +27,12 @@ export const readCommandDefinition = [
         })
       ),
   async (args) => {
-    const blob = await args.client.file.read({
-      id: args.id,
-    });
+    const blob = await args.client.file.read(
+      {
+        id: args.id,
+      },
+      { signal: args.timeout }
+    );
     const readable = Readable.fromWeb(blob.stream());
     await pipeline(readable, args.output ?? stdout);
   },

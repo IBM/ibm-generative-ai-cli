@@ -129,16 +129,19 @@ export const createCommandDefinition = [
         args.parameters = !isEmpty(parameters) ? parameters : undefined;
       }),
   async (args) => {
-    const { result } = await args.client.tune.create({
-      name: args.name,
-      model_id: args.model,
-      task_id: args.task,
-      method_id: args.method,
-      parameters: args.parameters,
-      training_file_ids: args.training,
-      validation_file_ids: args.validation,
-      evaluation_file_ids: args.evaluation,
-    });
+    const { result } = await args.client.tune.create(
+      {
+        name: args.name,
+        model_id: args.model,
+        task_id: args.task,
+        method_id: args.method,
+        parameters: args.parameters,
+        training_file_ids: args.training,
+        validation_file_ids: args.validation,
+        evaluation_file_ids: args.evaluation,
+      },
+      { signal: args.timeout }
+    );
     args.print(result);
   },
 ];

@@ -3,7 +3,10 @@ export const typesCommandDefinition = [
   "List all tune types",
   {},
   async (args) => {
-    const { results } = await args.client.tune.types({});
+    const { results } = await args.client.tune.types(
+      {},
+      { signal: args.timeout }
+    );
     args.print(results);
   },
 ];

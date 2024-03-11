@@ -15,11 +15,14 @@ export const listCommandDefinition = [
     ),
   async (args) => {
     await paginate(async ({ offset, limit }) => {
-      const { results, total_count } = await args.client.model.list({
-        type: args.type,
-        offset,
-        limit,
-      });
+      const { results, total_count } = await args.client.model.list(
+        {
+          type: args.type,
+          offset,
+          limit,
+        },
+        { signal: args.timeout }
+      );
       args.print(results.map(({ id, name }) => ({ id, name })));
       return { totalCount: total_count, itemsCount: results.length };
     });

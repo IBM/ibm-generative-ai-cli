@@ -7,9 +7,12 @@ export const retrieveCommandDefinition = [
       description: "Identifier of the file",
     }),
   async (args) => {
-    const { result } = await args.client.file.retrieve({
-      id: args.id,
-    });
+    const { result } = await args.client.file.retrieve(
+      {
+        id: args.id,
+      },
+      { signal: args.timeout }
+    );
     args.print(result);
   },
 ];

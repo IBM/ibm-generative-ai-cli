@@ -8,6 +8,6 @@ export const deleteCommandDefinition = [
     }),
   async (args) => {
     const { id } = args;
-    await args.client.tune.delete({ id });
+    await args.client.tune.delete({ id }, { signal: args.timeout });
   },
 ];

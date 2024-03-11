@@ -16,10 +16,13 @@ export const readCommandDefiniton = [
       }),
   async (args) => {
     const { id, type } = args;
-    const blob = await args.client.tune.read({
-      id,
-      type,
-    });
+    const blob = await args.client.tune.read(
+      {
+        id,
+        type,
+      },
+      { signal: args.timeout }
+    );
     const readable = Readable.fromWeb(blob.stream());
     await pipeline(readable, args.output ?? stdout);
   },
