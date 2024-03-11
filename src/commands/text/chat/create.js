@@ -1,7 +1,7 @@
-import { groupOptions } from "../../utils/yargs.js";
+import { groupOptions } from "../../../utils/yargs.js";
 
-export const chatCommandDefinition = [
-  ["chat <message>"],
+export const createCommandDefinition = [
+  ["create <message>"],
   "Have conversation with a model",
   (yargs) =>
     yargs
