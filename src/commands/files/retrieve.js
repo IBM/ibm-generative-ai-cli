@@ -1,5 +1,5 @@
-export const infoCommandDefinition = [
-  "info <id>",
+export const retrieveCommandDefinition = [
+  "retrieve <id>",
   "Show detailed information about a file",
   (yargs) =>
     yargs.positional("id", {
@@ -7,9 +7,9 @@ export const infoCommandDefinition = [
       description: "Identifier of the file",
     }),
   async (args) => {
-    const file = await args.client.file({
+    const { result } = await args.client.file.retrieve({
       id: args.id,
     });
-    args.print(file);
+    args.print(result);
   },
 ];

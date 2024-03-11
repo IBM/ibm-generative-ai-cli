@@ -4,7 +4,7 @@ import { clientMiddleware } from "../../../middleware/client.js";
 import { pickDefined } from "../../../utils/common.js";
 import { groupOptions } from "../../../utils/yargs.js";
 
-import { defaultCommandDefinition } from "./default.js";
+import { createCommandDefinition } from "./create.js";
 
 export const generationCommandDefinition = [
   "generation",
@@ -140,8 +140,6 @@ export const generationCommandDefinition = [
         });
         args.parameters = !isEmpty(parameters) ? parameters : undefined;
       })
-      .command(...defaultCommandDefinition)
-      .example('$0 generation "Hello World"', "Supply single input")
-      .example("$0 generation -f inputs.jsonl", "Supply JSONL file with inputs")
+      .command(...createCommandDefinition)
       .demandCommand(1, 1, "Please choose a command"),
 ];

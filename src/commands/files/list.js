@@ -1,5 +1,4 @@
-import { FilePurposeSchema } from "@ibm-generative-ai/node-sdk";
-
+import { paginate } from "../../utils/paginate.js";
 import { groupOptions } from "../../utils/yargs.js";
 
 export const listCommandDefinition = [
@@ -11,14 +10,18 @@ export const listCommandDefinition = [
       type: "array",
       description: "Filter listed by purpose",
       requiresArg: true,
-      choices: FilePurposeSchema.options,
     },
   }),
   async (args) => {
-    for await (const file of args.client.files()) {
-      if (!args.purpose || args.purpose.includes(file.purpose)) {
-        console.log(`${file.id} (${file.file_name})`);
-      }
-    }
+    const { purpose } = args;
+    await paginate(async ({ offset, limit }) => {
+      const { results, total_count } = await args.client.file.list({
+        offset,
+        limit,
+        purpose,
+      });
+      args.print(results);
+      return { totalCount: total_count, itemsCount: results.length };
+    });
   },
 ];

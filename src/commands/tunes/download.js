@@ -1,10 +1,7 @@
 import { stdout } from "node:process";
 import { pipeline } from "node:stream/promises";
 
-import {
-  BaseError as BaseSDKError,
-  TuneAssetTypeSchema,
-} from "@ibm-generative-ai/node-sdk";
+import { BaseError as BaseSDKError } from "@ibm-generative-ai/node-sdk";
 
 export const downloadCommandDefiniton = [
   "download <asset> <id>",

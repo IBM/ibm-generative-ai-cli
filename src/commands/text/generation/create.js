@@ -7,14 +7,14 @@ import { readJSONStream } from "../../../utils/streams.js";
 import { groupOptions } from "../../../utils/yargs.js";
 import { parseInput } from "../../../utils/parsers.js";
 
-export const defaultCommandDefinition = [
-  ["$0 [inputs..]"], // Default subcommand for generate command
+export const createCommandDefinition = [
+  ["create [input]"], // Default subcommand for generate command
   "Generate a text based on an input. Outputs will follow JSONL format. Inputs coming from stdin MUST follow the JSONL format.",
   (yargs) =>
     yargs
-      .positional("inputs", {
+      .positional("input", {
         describe: "Text serving as an input for the generation",
-        array: true,
+        type: "string",
         conflicts: "input",
       })
       .options(
@@ -66,10 +66,12 @@ export const defaultCommandDefinition = [
     let hasError = false;
     if (args.parameters?.stream) {
       try {
-        for await (const chunk of args.client.generate(mappedInputs, {
-          signal: AbortSignal.timeout(args.timeout),
-          stream: true,
-        })) {
+        for await (const chunk of args.client.text.generation.create_stream(
+          mappedInputs,
+          {
+            signal: AbortSignal.timeout(args.timeout),
+          }
+        )) {
           outputStream.write(chunk.generated_text);
         }
       } catch (err) {
@@ -79,7 +81,7 @@ export const defaultCommandDefinition = [
         outputStream.write("\n");
       }
     } else {
-      for (const promise of args.client.generate(mappedInputs, {
+      for (const promise of args.client.text.generation.create(mappedInputs, {
         signal: AbortSignal.timeout(args.timeout),
       })) {
         try {

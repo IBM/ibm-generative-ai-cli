@@ -1,12 +1,10 @@
 import { createReadStream } from "node:fs";
 import path from "node:path";
 
-import { FilePurposeSchema } from "@ibm-generative-ai/node-sdk";
-
 import { groupOptions } from "../../utils/yargs.js";
 
-export const uploadCommandDefinition = [
-  "upload <file>",
+export const createCommandDefinition = [
+  "create <file>",
   "Upload a file",
   (yargs) =>
     yargs
@@ -22,7 +20,6 @@ export const uploadCommandDefinition = [
             description: "Purpose of the file",
             requiresArg: true,
             demandOption: true,
-            choices: FilePurposeSchema.options,
           },
           name: {
             alias: "n",
@@ -33,11 +30,14 @@ export const uploadCommandDefinition = [
         })
       ),
   async (args) => {
-    const { id, file_name, purpose, created_at } = await args.client.file({
-      purpose: args.purpose,
-      filename: args.name ?? path.parse(args.file).base,
-      file: createReadStream(args.file),
+    const { purpose, name, file } = args;
+    const { result } = await args.client.file.create({
+      purpose,
+      file: {
+        name: name ?? path.parse(file).base,
+        content: new Blob(await createReadStream(file).toArray()),
+      },
     });
-    args.print({ id, name: file_name, purpose, created_at });
+    args.print(result);
   },
 ];

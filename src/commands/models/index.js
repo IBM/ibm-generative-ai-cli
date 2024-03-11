@@ -1,15 +1,15 @@
 import { clientMiddleware } from "../../middleware/client.js";
 
-import { infoCommandDefinition } from "./info.js";
+import { retrieveCommandDefinition } from "./retrieve.js";
 import { listCommandDefinition } from "./list.js";
 
 export const modelsCommandDefinition = [
-  "models",
+  "model",
   "Show information about available models",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
       .command(...listCommandDefinition)
-      .command(...infoCommandDefinition)
+      .command(...retrieveCommandDefinition)
       .demandCommand(1, 1, "Please choose a command"),
 ];

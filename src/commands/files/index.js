@@ -1,21 +1,21 @@
 import { clientMiddleware } from "../../middleware/client.js";
 
 import { deleteCommandDefinition } from "./delete.js";
-import { downloadCommandDefinition } from "./download.js";
-import { infoCommandDefinition } from "./info.js";
+import { readCommandDefinition } from "./read.js";
+import { retrieveCommandDefinition } from "./retrieve.js";
 import { listCommandDefinition } from "./list.js";
-import { uploadCommandDefinition } from "./upload.js";
+import { createCommandDefinition } from "./create.js";
 
 export const filesCommandDefinition = [
-  "files",
+  "file",
   "Upload, download and manage files",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
-      .command(...listCommandDefinition)
-      .command(...infoCommandDefinition)
-      .command(...uploadCommandDefinition)
-      .command(...downloadCommandDefinition)
+      .command(...createCommandDefinition)
+      .command(...retrieveCommandDefinition)
+      .command(...readCommandDefinition)
       .command(...deleteCommandDefinition)
+      .command(...listCommandDefinition)
       .demandCommand(1, 1, "Please choose a command"),
 ];
