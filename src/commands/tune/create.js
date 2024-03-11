@@ -129,7 +129,7 @@ export const createCommandDefinition = [
         args.parameters = !isEmpty(parameters) ? parameters : undefined;
       }),
   async (args) => {
-    const { id, name } = await args.client.tune({
+    const { result } = await args.client.tune.create({
       name: args.name,
       model_id: args.model,
       task_id: args.task,
@@ -139,6 +139,6 @@ export const createCommandDefinition = [
       validation_file_ids: args.validation,
       evaluation_file_ids: args.evaluation,
     });
-    args.print({ id, name });
+    args.print(result);
   },
 ];

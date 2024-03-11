@@ -2,7 +2,7 @@ import { clientMiddleware } from "../../middleware/client.js";
 
 import { listCommandDefinition } from "./list.js";
 
-export const historyCommandDefinition = [
+export const requestCommandDefinition = [
   "request",
   "Show request history (for the past 30 days)",
   (yargs) =>

@@ -5,8 +5,8 @@ import { profileMiddleware } from "./middleware/profile.js";
 import { textCommandDefinition } from "./commands/text/index.js";
 import { modelsCommandDefinition } from "./commands/models/index.js";
 import { filesCommandDefinition } from "./commands/files/index.js";
-import { historyCommandDefinition } from "./commands/history/index.js";
-import { tunesCommandDefinition } from "./commands/tunes/index.js";
+import { requestCommandDefinition } from "./commands/request/index.js";
+import { tuneCommandDefinition } from "./commands/tune/index.js";
 import { configCommandDefinition } from "./commands/config/index.js";
 import { printMiddleware } from "./middleware/print.js";
 
@@ -30,6 +30,7 @@ export const parser = yargs(hideBin(process.argv))
       requiresArg: true,
       type: "number",
       defaultDescription: "none",
+      coerce: (timeout) => AbortSignal.timeout(timeout),
     },
     "profile": {
       describe: "Use a specific profile from your configuration",
@@ -52,8 +53,8 @@ export const parser = yargs(hideBin(process.argv))
   .command(...textCommandDefinition)
   .command(...modelsCommandDefinition)
   .command(...filesCommandDefinition)
-  .command(...historyCommandDefinition)
-  .command(...tunesCommandDefinition)
+  .command(...requestCommandDefinition)
+  .command(...tuneCommandDefinition)
   .demandCommand(1, 1, "Please choose a command")
   .strict()
   .fail(false)

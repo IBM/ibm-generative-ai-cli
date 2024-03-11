@@ -1,5 +1,5 @@
-export const infoCommandDefinition = [
-  "info <id>",
+export const retrieveCommandDefinition = [
+  "retrieve <id>",
   "Show detailed information about a tuned model",
   (yargs) =>
     yargs.positional("id", {
@@ -7,9 +7,10 @@ export const infoCommandDefinition = [
       description: "Identifier of the tuned model",
     }),
   async (args) => {
-    const { id, name } = await args.client.tune({
-      id: args.id,
+    const { id } = args;
+    const { result } = await args.client.tune.retrieve({
+      id,
     });
-    args.print({ id, name });
+    args.print(result);
   },
 ];

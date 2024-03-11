@@ -2,22 +2,22 @@ import { clientMiddleware } from "../../middleware/client.js";
 
 import { createCommandDefinition } from "./create.js";
 import { deleteCommandDefinition } from "./delete.js";
-import { downloadCommandDefiniton } from "./download.js";
-import { infoCommandDefinition } from "./info.js";
+import { readCommandDefiniton } from "./read.js";
+import { retrieveCommandDefinition } from "./retrieve.js";
 import { listCommandDefinition } from "./list.js";
 import { typesCommandDefinition } from "./types.js";
 
-export const tunesCommandDefinition = [
-  "tunes",
+export const tuneCommandDefinition = [
+  "tune",
   "Create and manage tuned models",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
-      .command(...typesCommandDefinition)
-      .command(...listCommandDefinition)
-      .command(...infoCommandDefinition)
       .command(...createCommandDefinition)
-      .command(...downloadCommandDefiniton)
+      .command(...retrieveCommandDefinition)
+      .command(...readCommandDefiniton)
       .command(...deleteCommandDefinition)
+      .command(...listCommandDefinition)
+      .command(...typesCommandDefinition)
       .demandCommand(1, 1, "Please choose a command"),
 ];
