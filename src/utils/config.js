@@ -15,11 +15,13 @@ const CREDENTIALS_PATH = path.join(CONFIG_DIR_PATH, "credentials.yml");
 
 const configurationSchema = z
   .object({
-    endpoint: z.string(), // default profile
-    profiles: z.record(
+    "endpoint": z.string(), // default profile
+    "output-format": z.string(),
+    "profiles": z.record(
       z
         .object({
-          endpoint: z.string(),
+          "endpoint": z.string(),
+          "output-format": z.string(),
         })
         .partial()
     ),

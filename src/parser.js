@@ -2,52 +2,59 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 
 import { profileMiddleware } from "./middleware/profile.js";
-import { generateCommandDefinition } from "./commands/generate/index.js";
+import { textCommandDefinition } from "./commands/text/index.js";
 import { modelsCommandDefinition } from "./commands/models/index.js";
-import { tokenizeCommandDefinition } from "./commands/tokenize/index.js";
 import { filesCommandDefinition } from "./commands/files/index.js";
-import { historyCommandDefinition } from "./commands/history/index.js";
-import { tunesCommandDefinition } from "./commands/tunes/index.js";
+import { requestCommandDefinition } from "./commands/request/index.js";
+import { tuneCommandDefinition } from "./commands/tune/index.js";
 import { configCommandDefinition } from "./commands/config/index.js";
+import { printMiddleware } from "./middleware/print.js";
 
 export const parser = yargs(hideBin(process.argv))
   .options({
-    endpoint: {
+    "endpoint": {
       describe: "Provide custom endpoint",
       defaultDescription: "GENAI_ENDPOINT or config",
       requiresArg: true,
       type: "string",
     },
-    apiKey: {
+    "apiKey": {
       alias: "k",
       describe: "Provide your api key",
       defaultDescription: "GENAI_API_KEY or config",
       requiresArg: true,
       type: "string",
     },
-    timeout: {
+    "timeout": {
       describe: "Request timeout in milliseconds",
       requiresArg: true,
       type: "number",
       defaultDescription: "none",
+      coerce: (timeout) => AbortSignal.timeout(timeout),
     },
-    profile: {
+    "profile": {
       describe: "Use a specific profile from your configuration",
       requiresArg: true,
       type: "string",
     },
+    "output-format": {
+      type: "string",
+      choice: ["json", "yaml"],
+      default: "json",
+      describe: "Output format",
+    },
   })
+  .middleware(printMiddleware)
   .middleware(profileMiddleware)
   .help()
   .alias("h", "help")
   .updateStrings({ "Options:": "Global Options:" })
   .command(...configCommandDefinition)
-  .command(...generateCommandDefinition)
+  .command(...textCommandDefinition)
   .command(...modelsCommandDefinition)
-  .command(...tokenizeCommandDefinition)
   .command(...filesCommandDefinition)
-  .command(...historyCommandDefinition)
-  .command(...tunesCommandDefinition)
+  .command(...requestCommandDefinition)
+  .command(...tuneCommandDefinition)
   .demandCommand(1, 1, "Please choose a command")
   .strict()
   .fail(false)

@@ -3,29 +3,28 @@ import { groupOptions } from "../../utils/yargs.js";
 
 export const listCommandDefinition = [
   "list",
-  "List all files",
+  "List all tuned models",
   groupOptions({
-    purpose: {
-      alias: "p",
-      type: "array",
-      description: "Filter listed by purpose",
+    name: {
+      type: "string",
+      description: "Filter tuned models by name",
       requiresArg: true,
     },
   }),
   async (args) => {
-    const { purpose } = args;
+    const { name } = args;
     await paginate(async ({ offset, limit }) => {
-      const output = await args.client.file.list(
+      const output = await args.client.tune.list(
         {
           offset,
           limit,
-          purpose,
+          search: name,
         },
         { signal: args.timeout }
       );
       args.print(output);
       return {
-        totalCount: output.totalCount,
+        totalCount: output.total_count,
         itemsCount: output.results.length,
       };
     });

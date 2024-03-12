@@ -7,6 +7,7 @@ export const deleteCommandDefinition = [
       description: "Identifier of the tuned model",
     }),
   async (args) => {
-    await args.client.tune({ id: args.id }, { delete: true });
+    const { id } = args;
+    await args.client.tune.delete({ id }, { signal: args.timeout });
   },
 ];

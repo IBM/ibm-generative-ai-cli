@@ -2,7 +2,6 @@ import isEmpty from "lodash/isEmpty.js";
 
 import { pickDefined } from "../../utils/common.js";
 import { groupOptions } from "../../utils/yargs.js";
-import { prettyPrint } from "../../utils/print.js";
 
 export const createCommandDefinition = [
   "create",
@@ -29,9 +28,9 @@ export const createCommandDefinition = [
             demandOption: true,
             choices: ["generation", "classification", "summarization"],
           },
-          method: {
+          type: {
             type: "string",
-            description: "Tuning method",
+            description: "Tuning type",
             requiresArg: true,
             demandOption: true,
           },
@@ -130,16 +129,19 @@ export const createCommandDefinition = [
         args.parameters = !isEmpty(parameters) ? parameters : undefined;
       }),
   async (args) => {
-    const { id, name } = await args.client.tune({
-      name: args.name,
-      model_id: args.model,
-      task_id: args.task,
-      method_id: args.method,
-      parameters: args.parameters,
-      training_file_ids: args.training,
-      validation_file_ids: args.validation,
-      evaluation_file_ids: args.evaluation,
-    });
-    prettyPrint({ id, name });
+    const output = await args.client.tune.create(
+      {
+        name: args.name,
+        model_id: args.model,
+        task_id: args.task,
+        method_id: args.method,
+        parameters: args.parameters,
+        training_file_ids: args.training,
+        validation_file_ids: args.validation,
+        evaluation_file_ids: args.evaluation,
+      },
+      { signal: args.timeout }
+    );
+    args.print(output);
   },
 ];
