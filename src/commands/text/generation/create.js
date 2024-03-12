@@ -31,7 +31,9 @@ export const createCommandDefinition = [
   async (args) => {
     const inlineInputs = args.inputs;
     const inputs =
-      inlineInputs ?? (await readJSONStream(stdin)).map(parseInput);
+      inlineInputs.length > 0
+        ? inlineInputs
+        : (await readJSONStream(stdin)).map(parseInput);
 
     const { model, parameters, allowErrors } = args;
     const promises = inputs.map((input) =>

@@ -13,8 +13,7 @@ export const createCommandDefinition = [
       .middleware(clientMiddleware)
       .positional("inputs", {
         describe: "Text serving as an input for the generation",
-        array: true,
-        conflicts: "input",
+        type: "array",
       })
       .options(
         groupOptions(
@@ -48,10 +47,12 @@ export const createCommandDefinition = [
   async (args) => {
     const inlineInputs = args.inputs;
     const inputs =
-      inlineInputs ?? (await readJSONStream(stdin)).map(parseInput);
+      inlineInputs.length > 0
+        ? inlineInputs
+        : (await readJSONStream(stdin)).map(parseInput);
 
     const { model, tokens, inputText } = args;
-    const { results } = await args.client.text.tokenization.create(
+    const output = await args.client.text.tokenization.create(
       {
         model_id: model,
         input: inputs,
@@ -66,6 +67,6 @@ export const createCommandDefinition = [
         signal: args.timeout,
       }
     );
-    args.print(results);
+    args.print(output);
   },
 ];
