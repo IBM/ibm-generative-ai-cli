@@ -14,7 +14,7 @@ export const listCommandDefinition = [
   async (args) => {
     const { name } = args;
     await paginate(async ({ offset, limit }) => {
-      const { results, total_count } = await args.client.tune.list(
+      const output = await args.client.tune.list(
         {
           offset,
           limit,
@@ -22,8 +22,11 @@ export const listCommandDefinition = [
         },
         { signal: args.timeout }
       );
-      args.print(results);
-      return { totalCount: total_count, itemsCount: results.length };
+      args.print(output);
+      return {
+        totalCount: output.total_count,
+        itemsCount: output.results.length,
+      };
     });
   },
 ];

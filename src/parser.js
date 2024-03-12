@@ -38,10 +38,10 @@ export const parser = yargs(hideBin(process.argv))
       type: "string",
     },
     "output-format": {
-      describe: "Select output format",
       type: "string",
-      choice: ["json", "yaml", "text"],
+      choice: ["json", "yaml"],
       default: "json",
+      describe: "Output format",
     },
   })
   .middleware(printMiddleware)

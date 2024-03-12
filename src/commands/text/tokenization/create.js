@@ -1,5 +1,4 @@
 import { stdin } from "node:process";
-import { createReadStream } from "node:fs";
 
 import { clientMiddleware } from "../../../middleware/client.js";
 import { parseInput } from "../../../utils/parsers.js";
@@ -12,10 +11,15 @@ export const createCommandDefinition = [
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
+      .positional("inputs", {
+        describe: "Text serving as an input for the generation",
+        array: true,
+        conflicts: "input",
+      })
       .options(
         groupOptions(
           {
-            model: {
+            "model": {
               alias: "m",
               describe: "ID of a model used for tokenization",
               demandOption: true,
@@ -27,37 +31,6 @@ export const createCommandDefinition = [
                 return model;
               },
             },
-          },
-          "Configuration:"
-        )
-      )
-      .positional("inputs", {
-        describe: "Text serving as an input for the generation",
-        array: true,
-        conflicts: "input",
-      })
-      .options(
-        groupOptions({
-          file: {
-            alias: "f",
-            describe:
-              "File to read the inputs from. File MUST be in JSONL format",
-            array: true,
-            normalize: true,
-            requiresArg: true,
-            conflicts: "inputs",
-            coerce: async (files) => {
-              const inputs = await Promise.all(
-                files.map((file) => readJSONStream(createReadStream(file)))
-              );
-              return inputs.flat().map(parseInput);
-            },
-          },
-        })
-      )
-      .options(
-        groupOptions(
-          {
             "tokens": {
               type: "boolean",
               description: "Return tokens, not just the token count",
@@ -77,10 +50,10 @@ export const createCommandDefinition = [
     const inputs =
       inlineInputs ?? (await readJSONStream(stdin)).map(parseInput);
 
-    const { tokens, inputText } = args;
+    const { model, tokens, inputText } = args;
     const { results } = await args.client.text.tokenization.create(
       {
-        model_id: args.model,
+        model_id: model,
         input: inputs,
         parameters: {
           return_options: {

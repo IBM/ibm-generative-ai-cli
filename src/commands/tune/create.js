@@ -129,7 +129,7 @@ export const createCommandDefinition = [
         args.parameters = !isEmpty(parameters) ? parameters : undefined;
       }),
   async (args) => {
-    const { result } = await args.client.tune.create(
+    const output = await args.client.tune.create(
       {
         name: args.name,
         model_id: args.model,
@@ -142,6 +142,6 @@ export const createCommandDefinition = [
       },
       { signal: args.timeout }
     );
-    args.print(result);
+    args.print(output);
   },
 ];

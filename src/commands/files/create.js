@@ -31,7 +31,7 @@ export const createCommandDefinition = [
       ),
   async (args) => {
     const { purpose, name, file } = args;
-    const { result } = await args.client.file.create(
+    const output = await args.client.file.create(
       {
         purpose,
         file: {
@@ -41,6 +41,6 @@ export const createCommandDefinition = [
       },
       { signal: args.timeout }
     );
-    args.print(result);
+    args.print(output);
   },
 ];

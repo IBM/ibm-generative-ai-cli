@@ -1,36 +1,26 @@
-import { createReadStream } from "node:fs";
 import { stdin } from "node:process";
 
 import { readJSONStream } from "../../../utils/streams.js";
 import { groupOptions } from "../../../utils/yargs.js";
 import { parseInput } from "../../../utils/parsers.js";
+import { clientMiddleware } from "../../../middleware/client.js";
+
+import { generationConfig, generationMiddleware } from "./index.js";
 
 export const createCommandDefinition = [
-  ["create [inputs..]"], // Default subcommand for generate command
-  "Generate a text based on an input. Outputs will follow JSONL format. Inputs coming from stdin MUST follow the JSONL format.",
+  ["create [inputs..]"],
+  "Generate text based on input(s)",
   (yargs) =>
     yargs
+      .middleware(clientMiddleware)
+      .options(generationConfig)
+      .middleware(generationMiddleware)
       .positional("inputs", {
-        describe: "Text serving as an input for the generation",
+        describe: "Inputs for the generation",
         type: "array",
       })
       .options(
         groupOptions({
-          "file": {
-            alias: "f",
-            describe:
-              "File to read the inputs from. File MUST follow JSONL format",
-            array: true,
-            normalize: true,
-            requiresArg: true,
-            conflicts: "inputs",
-            coerce: async (files) => {
-              const inputs = await Promise.all(
-                files.map((file) => readJSONStream(createReadStream(file)))
-              );
-              return inputs.flat().map(parseInput);
-            },
-          },
           "allow-errors": {
             type: "boolean",
             description: "Continue if generation fails for an input",
@@ -39,12 +29,9 @@ export const createCommandDefinition = [
         })
       ),
   async (args) => {
-    const fileInputs = args.file;
     const inlineInputs = args.inputs;
     const inputs =
-      inlineInputs ??
-      fileInputs ??
-      (await readJSONStream(stdin)).map(parseInput);
+      inlineInputs ?? (await readJSONStream(stdin)).map(parseInput);
 
     const { model, parameters, allowErrors } = args;
     const promises = inputs.map((input) =>

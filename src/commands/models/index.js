@@ -5,7 +5,7 @@ import { listCommandDefinition } from "./list.js";
 
 export const modelsCommandDefinition = [
   "model",
-  "Show information about available models",
+  "Available models",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)

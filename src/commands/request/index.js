@@ -4,7 +4,7 @@ import { listCommandDefinition } from "./list.js";
 
 export const requestCommandDefinition = [
   "request",
-  "Show request history (for the past 30 days)",
+  "Request history (for the past 30 days)",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)

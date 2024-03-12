@@ -15,7 +15,7 @@ export const listCommandDefinition = [
   async (args) => {
     const { purpose } = args;
     await paginate(async ({ offset, limit }) => {
-      const { results, total_count } = await args.client.file.list(
+      const output = await args.client.file.list(
         {
           offset,
           limit,
@@ -23,8 +23,11 @@ export const listCommandDefinition = [
         },
         { signal: args.timeout }
       );
-      args.print(results);
-      return { totalCount: total_count, itemsCount: results.length };
+      args.print(output);
+      return {
+        totalCount: output.totalCount,
+        itemsCount: output.results.length,
+      };
     });
   },
 ];

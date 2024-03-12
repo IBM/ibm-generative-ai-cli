@@ -3,10 +3,10 @@ export const retrieveCommandDefinition = [
   "Retrieve information about a model",
   (yargs) => yargs.positional("id", { type: "string" }),
   async (args) => {
-    const { result } = await args.client.model.retrieve(
+    const output = await args.client.model.retrieve(
       { id: args.id },
       { signal: args.timeout }
     );
-    args.print(result);
+    args.print(output);
   },
 ];

@@ -1,5 +1,6 @@
 import { groupOptions } from "../../../utils/yargs.js";
 import { clientMiddleware } from "../../../middleware/client.js";
+import { generationConfig, generationMiddleware } from "../generation/index.js";
 
 export const createCommandDefinition = [
   ["create <message>"],
@@ -7,6 +8,9 @@ export const createCommandDefinition = [
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
+      .middleware(clientMiddleware)
+      .options(generationConfig)
+      .middleware(generationMiddleware)
       .options(
         groupOptions({
           model: {

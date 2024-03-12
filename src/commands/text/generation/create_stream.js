@@ -1,11 +1,19 @@
+import { clientMiddleware } from "../../../middleware/client.js";
+
+import { generationConfig, generationMiddleware } from "./index.js";
+
 export const createStreamCommandDefinition = [
-  ["create-stream input"], // Default subcommand for generate command
-  "Generate a text based on an input. Outputs will follow JSONL format. Inputs coming from stdin MUST follow the JSONL format.",
+  ["create-stream <input>"],
+  "Generate text based on input",
   (yargs) =>
-    yargs.positional("input", {
-      describe: "Text serving as an input for the generation",
-      type: "string",
-    }),
+    yargs
+      .middleware(clientMiddleware)
+      .options(generationConfig)
+      .middleware(generationMiddleware)
+      .positional("input", {
+        describe: "Input for the generation",
+        type: "string",
+      }),
   async (args) => {
     const { model, parameters, input } = args;
     const stream = await args.client.text.generation.create_stream(

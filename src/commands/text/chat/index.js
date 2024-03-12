@@ -2,7 +2,7 @@ import { createCommandDefinition } from "./create.js";
 
 export const chatCommandDefinition = [
   "chat",
-  "Chat with a selected model",
+  "Have a conversation",
   (yargs) =>
     yargs
       .command(...createCommandDefinition)

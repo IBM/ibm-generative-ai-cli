@@ -9,7 +9,7 @@ import { typesCommandDefinition } from "./types.js";
 
 export const tuneCommandDefinition = [
   "tune",
-  "Create and manage tuned models",
+  "Train and manage tuned models",
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
