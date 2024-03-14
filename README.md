@@ -3,9 +3,7 @@
 This is not the [watsonx.ai](https://www.ibm.com/products/watsonx-ai) CLI. This is the CLI for the Tech Preview program for IBM Foundation Models Studio.
 You can start a trial version or request a demo via https://www.ibm.com/products/watsonx-ai.
 
-This project provides convenient access to the Generative AI API from the command line. For a full description of the API, please visit the [Generative AI API Documentation](https://workbench.res.ibm.com/docs/api-reference).
-
-![demo](./assets/img/demo.gif)
+This project provides convenient access to the Generative AI API from the command line. For a full description of the API, please visit the [Generative AI API Documentation](https://bam.res.ibm.com/docs/api-reference).
 
 _Are you looking for an SDK?<br>
 If so, check out the [NodeJS SDK](https://github.com/IBM/ibm-generative-ai-node-sdk) and [Python SDK](https://github.com/IBM/ibm-generative-ai)._
@@ -73,51 +71,18 @@ genai --profile joe config
 
 All the commands executed with `--profile joe` argument will use that configuration (and default as a fallback).
 
-## Usage
+## Commands
 
 ```bash
-# Run single generate request:
-genai generate "Once upon a time there lived a rabbit"
-# " called Edward. He lived well because he had some things to eat. He had a wife called Daisy"
+$ genai --help
+genai <command>
 
-# Run multiple generate requests from a file:
-# "Best Christmas gift for dad: "
-# "Best Christmas gift for mum: "
-# "Best Christmas gift for dog: "
-genai generate -f inputs.txt
-# "a new wallet"
-# "a day out"
-# "a bone"
-
-# Run tokenize request:
-genai tokenize "This is a future."
-# {"token_count":5,"tokens":["This", "is", "a", "future", "."]}
-
-# Retrieve generate config
-genai generate config
-# model_id: google/flan-ul2,
-# parameters:
-#   max_new_tokens: 1,
-#   decoding_method: greedy
-#
-
-# Update generate config
-genai generate config -m google/flan-ul2 --decoding-method greedy --max-new-tokens 5 --min-new-tokens 1
-
-# Enter interactive mode
-genai generate interactive
-
-# List models
-genai models list
-# google/flan-t5-xxl
-# google/flan-ul2
-# ...
-
-# Show model details
-genai models info google/flan-ul2
-# id: google/flan-ul2
-# name: flan-ul2 (20B)
-# size: 20B
-# description: >-
-#   flan-ul2 (20B) is an encoder decoder model ...
+Commands:
+  genai config      Manage CLI configuration
+  genai text        Text generation, tokenization and chat services
+  genai model       Available models
+  genai file        Upload, download and manage files
+  genai request     Request history (for the past 30 days)
+  genai tune        Train and manage tuned models
+  genai completion  Generate completion script
 ```
