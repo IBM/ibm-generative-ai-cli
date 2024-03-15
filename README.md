@@ -27,7 +27,6 @@ If so, check out the [NodeJS SDK](https://github.com/IBM/ibm-generative-ai-node-
 - ⏩ Requests are always returned in the respective order
 - 📄 Work with files as your input or output
 - ⌨️ Support stdin and stdout interaction
-- 🕹️ Interactive context-free mode
 
 ![-----------------------------------------------------](./assets/img/rainbow.png)
 
@@ -77,7 +76,7 @@ The full commands have many segments due to alignment with the SDK and REST API.
 
 ```bash
 genai completion >> ~/.zshrc
-source ~./zshrc
+source ~/.zshrc
 ```
 
 ### Output format
