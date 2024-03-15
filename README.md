@@ -71,6 +71,19 @@ genai --profile joe config
 
 All the commands executed with `--profile joe` argument will use that configuration (and default as a fallback).
 
+### Autocompletion
+
+The full commands have many segments due to alignment with the SDK and REST API. The CLI works best with autocompletion. Run the following to activate autocompletion, replace `.zshrc` with the configuration file of your shell:
+
+```bash
+genai completion >> ~/.zshrc
+source ~./zshrc
+```
+
+### Output format
+
+You can choose default output format during `genai config` or set it via `--output-format` flag. Choices are `yaml` and `json`. Former is ideal for direct viewing, latter for piping into [jq](https://jqlang.github.io/jq/).
+
 ## Commands
 
 ```bash
