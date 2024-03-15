@@ -8,22 +8,12 @@ export const createCommandDefinition = [
   (yargs) =>
     yargs
       .middleware(clientMiddleware)
-      .middleware(clientMiddleware)
-      .options(generationConfig)
-      .middleware(generationMiddleware)
+      .positional("message", {
+        type: "string",
+        describe: "Content of the message",
+      })
       .options(
         groupOptions({
-          model: {
-            alias: "m",
-            describe: "Select a model to be used for chat",
-            requiresArg: true,
-            type: "string",
-            coerce: (parameters) => {
-              if (typeof parameters !== "string")
-                throw new Error("Only a single model must be specified");
-              return parameters;
-            },
-          },
           conversation: {
             alias: "c",
             type: "string",
@@ -38,10 +28,8 @@ export const createCommandDefinition = [
           },
         })
       )
-      .positional("message", {
-        describe: "",
-        array: true,
-      }),
+      .options(generationConfig)
+      .middleware(generationMiddleware),
   async (args) => {
     const { model, message } = args;
     const output = await args.client.text.chat.create(

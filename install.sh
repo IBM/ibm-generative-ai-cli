@@ -61,7 +61,7 @@ then
         exit 1
     fi
 else
-    MINIMAL="v16.10.0"
+    MINIMAL="v18.18.2"
     DETECTED=$(node -v)
     echo $DETECTED
     RESULT=$(node -e "console.log(\"$DETECTED\".replace('v', '').localeCompare(\"$MINIMAL\".replace('v', ''), undefined, { numeric: true }))")
