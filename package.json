@@ -1,6 +1,6 @@
 {
   "name": "@ibm-generative-ai/cli",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "CLI for IBM Generative AI (Tech Preview)",
   "keywords": [
     "ai",
@@ -44,7 +44,7 @@
     ]
   },
   "dependencies": {
-    "@ibm-generative-ai/node-sdk": "^2.0.0",
+    "@ibm-generative-ai/node-sdk": "^2.0.2",
     "dayjs": "^1.11.9",
     "lodash": "^4.17.21",
     "stream-json": "^1.7.5",

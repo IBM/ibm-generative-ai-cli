@@ -92,7 +92,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ibm-generative-ai/cli@workspace:."
   dependencies:
-    "@ibm-generative-ai/node-sdk": ^2.0.0
+    "@ibm-generative-ai/node-sdk": ^2.0.2
     dayjs: ^1.11.9
     eslint: ^8.56.0
     eslint-config-prettier: ^8.8.0
@@ -109,18 +109,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ibm-generative-ai/node-sdk@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@ibm-generative-ai/node-sdk@npm:2.0.0"
+"@ibm-generative-ai/node-sdk@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@ibm-generative-ai/node-sdk@npm:2.0.2"
   dependencies:
     "@ai-zen/node-fetch-event-source": ^2.1.2
     fetch-retry: ^5.0.6
+    http-status-codes: ^2.3.0
     openapi-fetch: ^0.8.2
     p-queue: ^8.0.1
     yaml: ^2.3.3
   peerDependencies:
     "@langchain/core": ">=0.1.0"
-  checksum: 70064b43855ddc5923f71d7e2b17d9421b06b4a99b1d6c11e11c590d5d9cf419094a1406326ab4b2f5858b95bbf8e5f69d73a98d769cb5c1bbd5d3766dc7e5ec
+  checksum: 0dc17c082764b162234785f6b1f476feb895b7d42c1d063a20bb0ac3d6c94e8be23b8e93fd3ce02f285061082716f57bb69fb33f7b8d95720767cb4d6746f16a
   languageName: node
   linkType: hard
 
@@ -1046,6 +1047,13 @@ __metadata:
   dependencies:
     function-bind: ^1.1.2
   checksum: 6151c75ca12554565098641c98a40f4cc86b85b0fd5b6fe92360967e4605a4f9610f7757260b4e8098dd1c2ce7f4b095f2006fe72a570e3b6d2d28de0298c176
+  languageName: node
+  linkType: hard
+
+"http-status-codes@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "http-status-codes@npm:2.3.0"
+  checksum: dae3b99e0155441b6df28e8265ff27c56a45f82c6092f736414233e9ccf063d5ea93c1e1279e8b499c4642e2538b37995c76b1640ed3f615d0e2883d3a1dcfd5
   languageName: node
   linkType: hard
 

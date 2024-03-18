@@ -10,7 +10,7 @@ export function format(data, format) {
   if (!isValidFormat(format)) new Error("Invalid format");
   switch (format) {
     case "json":
-      return JSON.stringify(data);
+      return JSON.stringify(data, null, 2);
     case "yaml":
       return YAML.stringify(data);
   }
