@@ -3,8 +3,8 @@ import { hideBin } from "yargs/helpers";
 
 import { profileMiddleware } from "./middleware/profile.js";
 import { textCommandDefinition } from "./commands/text/index.js";
-import { modelsCommandDefinition } from "./commands/models/index.js";
-import { filesCommandDefinition } from "./commands/files/index.js";
+import { modelsCommandDefinition } from "./commands/model/index.js";
+import { filesCommandDefinition } from "./commands/file/index.js";
 import { requestCommandDefinition } from "./commands/request/index.js";
 import { tuneCommandDefinition } from "./commands/tune/index.js";
 import { configCommandDefinition } from "./commands/config/index.js";

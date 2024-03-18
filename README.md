@@ -81,7 +81,19 @@ source ~/.zshrc
 
 ### Output format
 
-You can choose default output format during `genai config` or set it via `--output-format` flag. Choices are `yaml` and `json`. Former is ideal for direct viewing, latter for piping into [jq](https://jqlang.github.io/jq/).
+You can choose default output format during `genai config` or set it via `--output-format` flag. Choices are `json` and `yaml`. Former can be piped into [jq](https://jqlang.github.io/jq/) for further processing. Default is `json`.
+
+### Many inputs
+
+Certain commands (e.g. `text generation create` or `text tokenization create`) accept inputs from `stdin` if positional arguments are omitted. The content of `stdin` MUST follow [JSONL](https://jsonlines.org/) format.
+
+```bash
+cat inputs.jsonl
+# "foo"
+# "bar"
+# "baz"
+cat inputs.jsonl moreInputs.jsonl | genai text generation create -m google/flan-ul2 | jq '.results[0].generated_text'
+```
 
 ## Commands
 
