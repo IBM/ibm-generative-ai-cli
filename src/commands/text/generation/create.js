@@ -25,7 +25,7 @@ export const createCommandDefinition = [
         groupOptions({
           "allow-errors": {
             type: "boolean",
-            description: "Continue if generation fails for an input",
+            description: "Continue even if generation fails for an input",
             default: false,
           },
         })

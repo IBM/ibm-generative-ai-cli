@@ -1,15 +1,15 @@
 import { compose } from "node:stream";
 
-import Parser from "stream-json/Parser.js";
-import StreamValues from "stream-json/streamers/StreamValues.js";
+import Parser from "stream-json/jsonl/Parser.js";
 
 import { parseInput } from "./parsers.js";
 
 export const createInputStream = (stream) =>
   compose(
     stream,
-    new Parser({ jsonStreaming: true }),
-    new StreamValues(),
+    new Parser({
+      checkErrors: true,
+    }),
     async function* (source) {
       for await (const value of source) {
         yield parseInput(value.value);

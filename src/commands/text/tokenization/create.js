@@ -56,6 +56,12 @@ export const createCommandDefinition = [
               describe: "Batch size for inputs",
               default: 100,
             },
+            "allow-errors": {
+              type: "boolean",
+              description:
+                "Continue even if tokenization fails for a batch of inputs",
+              default: false,
+            },
           },
           "Options:"
         )
@@ -66,28 +72,36 @@ export const createCommandDefinition = [
       inlineInputs.length > 0
         ? Readable.from(inlineInputs)
         : createInputStream(stdin);
-    const { model, tokens, inputText, batchSize } = args;
+    const { model, tokens, inputText, batchSize, allowErrors } = args;
 
     for await (const inputs of compose(
       inputStream,
       createBatchTransform({ batchSize })
     )) {
-      const output = await args.client.text.tokenization.create(
-        {
-          model_id: model,
-          input: inputs,
-          parameters: {
-            return_options: {
-              input_text: inputText,
-              tokens,
+      try {
+        const output = await args.client.text.tokenization.create(
+          {
+            model_id: model,
+            input: inputs,
+            parameters: {
+              return_options: {
+                input_text: inputText,
+                tokens,
+              },
             },
           },
-        },
-        {
-          signal: args.timeout,
+          {
+            signal: args.timeout,
+          }
+        );
+        args.print(output);
+      } catch (err) {
+        if (allowErrors) {
+          args.print(err);
+        } else {
+          throw err;
         }
-      );
-      args.print(output);
+      }
     }
   },
 ];
