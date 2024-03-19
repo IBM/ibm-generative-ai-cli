@@ -1,11 +1,13 @@
 import { stdin } from "node:process";
+import { Readable } from "node:stream";
 
-import { readJSONStream } from "../../../utils/streams.js";
+import { createInputStream } from "../../../utils/streams.js";
 import { groupOptions } from "../../../utils/yargs.js";
-import { parseInput } from "../../../utils/parsers.js";
 import { clientMiddleware } from "../../../middleware/client.js";
 
 import { generationConfig, generationMiddleware } from "./index.js";
+
+const REQUEST_LIMIT = 1000; // We want to have reasonable memory footprint while maintaining full performance
 
 export const createCommandDefinition = [
   ["create [inputs..]"],
@@ -30,42 +32,46 @@ export const createCommandDefinition = [
       ),
   async (args) => {
     const inlineInputs = args.inputs;
-    const inputs =
+    const inputStream =
       inlineInputs.length > 0
-        ? inlineInputs
-        : (await readJSONStream(stdin)).map(parseInput);
+        ? Readable.from(inlineInputs)
+        : createInputStream(stdin);
 
     const { model, parameters, allowErrors } = args;
-    const promises = inputs.map((input) =>
-      args.client.text.generation.create(
-        {
-          model_id: model,
-          parameters,
-          input,
-        },
-        {
-          signal: args.timeout,
-        }
-      )
-    );
 
-    if (allowErrors) {
-      for (const { status, value, reason } of await Promise.allSettled(
-        promises
-      )) {
-        switch (status) {
-          case "fulfilled":
-            args.print(value);
-            break;
-          case "rejected":
-            args.print(reason);
-            break;
+    const requests = [];
+    const consume = async (request) => {
+      try {
+        const output = await request;
+        args.print(output);
+      } catch (err) {
+        if (allowErrors) {
+          args.print(err);
+        } else {
+          throw err;
         }
       }
-    } else {
-      for (const output of await Promise.all(promises)) {
-        args.print(output);
-      }
+    };
+    // Produce requests
+    for await (const input of inputStream) {
+      // If limit has been reached, consume the oldest request first
+      if (requests.length >= REQUEST_LIMIT) await consume(requests.shift());
+      requests.push(
+        args.client.text.generation.create(
+          {
+            model_id: model,
+            parameters,
+            input,
+          },
+          {
+            signal: args.timeout,
+          }
+        )
+      );
+    }
+    // Consume remaining requests
+    for (const request of requests) {
+      await consume(request);
     }
   },
 ];

@@ -1,28 +1,34 @@
-import { pipeline } from "stream/promises";
+import { compose } from "node:stream";
 
 import Parser from "stream-json/Parser.js";
 import StreamValues from "stream-json/streamers/StreamValues.js";
 
-import { InvalidInputError } from "../errors.js";
+import { parseInput } from "./parsers.js";
 
-export const readJSONStream = async (stream) => {
-  const values = [];
-  try {
-    await pipeline(
-      stream,
-      new Parser({ jsonStreaming: true }),
-      new StreamValues(),
-      async function (source) {
-        for await (const value of source) {
-          values.push(value.value);
-        }
+export const createInputStream = (stream) =>
+  compose(
+    stream,
+    new Parser({ jsonStreaming: true }),
+    new StreamValues(),
+    async function* (source) {
+      for await (const value of source) {
+        yield parseInput(value.value);
       }
-    );
-  } catch (err) {
-    throw new InvalidInputError(
-      "Failed to parse JSON stream, please check your input",
-      { cause: err }
-    );
-  }
-  return values;
-};
+    }
+  );
+
+export function createBatchTransform({ batchSize }) {
+  if (batchSize < 1) throw new Error("Batch size must be positive");
+
+  return async function* (source) {
+    let batch = [];
+    for await (const item of source) {
+      if (batch.length >= batchSize) {
+        yield batch;
+        batch = [];
+      }
+      batch.push(item);
+    }
+    if (batch.length > 0) yield batch;
+  };
+}

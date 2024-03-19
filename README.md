@@ -20,12 +20,11 @@ If so, check out the [NodeJS SDK](https://github.com/IBM/ibm-generative-ai-node-
 
 ## Key features
 
-- ⚡️ Performant - processes 1k of short inputs in about 4 minutes
+- ⚡️ Performant - processes 1k of short inputs in under a minute
 - ☀️ Fault-tolerant - retry strategies and overflood protection
 - 🏖️ Worry-free parallel processing - just pass all the data, we take care of the parallel processing
 - 🚦 Handles concurrency limiting - even if you have multiple parallel jobs running
 - ⏩ Requests are always returned in the respective order
-- 📄 Work with files as your input or output
 - ⌨️ Support stdin and stdout interaction
 
 ![-----------------------------------------------------](./assets/img/rainbow.png)

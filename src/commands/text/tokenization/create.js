@@ -1,8 +1,11 @@
 import { stdin } from "node:process";
+import { Readable, compose } from "node:stream";
 
 import { clientMiddleware } from "../../../middleware/client.js";
-import { parseInput } from "../../../utils/parsers.js";
-import { readJSONStream } from "../../../utils/streams.js";
+import {
+  createBatchTransform,
+  createInputStream,
+} from "../../../utils/streams.js";
 import { groupOptions } from "../../../utils/yargs.js";
 
 export const createCommandDefinition = [
@@ -43,30 +46,48 @@ export const createCommandDefinition = [
           },
           "Configuration:"
         )
+      )
+      .options(
+        groupOptions(
+          {
+            "batch-size": {
+              type: "number",
+              requiresArg: true,
+              describe: "Batch size for inputs",
+              default: 100,
+            },
+          },
+          "Options:"
+        )
       ),
   async (args) => {
     const inlineInputs = args.inputs;
-    const inputs =
+    const inputStream =
       inlineInputs.length > 0
-        ? inlineInputs
-        : (await readJSONStream(stdin)).map(parseInput);
+        ? Readable.from(inlineInputs)
+        : createInputStream(stdin);
+    const { model, tokens, inputText, batchSize } = args;
 
-    const { model, tokens, inputText } = args;
-    const output = await args.client.text.tokenization.create(
-      {
-        model_id: model,
-        input: inputs,
-        parameters: {
-          return_options: {
-            input_text: inputText,
-            tokens,
+    for await (const inputs of compose(
+      inputStream,
+      createBatchTransform({ batchSize })
+    )) {
+      const output = await args.client.text.tokenization.create(
+        {
+          model_id: model,
+          input: inputs,
+          parameters: {
+            return_options: {
+              input_text: inputText,
+              tokens,
+            },
           },
         },
-      },
-      {
-        signal: args.timeout,
-      }
-    );
-    args.print(output);
+        {
+          signal: args.timeout,
+        }
+      );
+      args.print(output);
+    }
   },
 ];
