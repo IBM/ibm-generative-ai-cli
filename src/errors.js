@@ -1,11 +1,4 @@
-import {
-  BaseError,
-  InvalidInputError as InvalidInputSDKError,
-} from "@ibm-generative-ai/node-sdk";
-
-export class InvalidInputError extends Error {}
+import { BaseError, InvalidInputError } from "@ibm-generative-ai/node-sdk";
 
 export const isUsageError = (err) =>
-  !(err instanceof BaseError) ||
-  err instanceof InvalidInputSDKError ||
-  err instanceof InvalidInputError;
+  !(err instanceof BaseError) || err instanceof InvalidInputError;
