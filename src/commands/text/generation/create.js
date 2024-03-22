@@ -7,8 +7,6 @@ import { clientMiddleware } from "../../../middleware/client.js";
 
 import { generationConfig, generationMiddleware } from "./index.js";
 
-const REQUEST_LIMIT = 1000; // We want to have reasonable memory footprint while maintaining full performance
-
 export const createCommandDefinition = [
   ["create [inputs..]"],
   "Generate text based on input(s)",
@@ -28,6 +26,11 @@ export const createCommandDefinition = [
             description: "Continue even if generation fails for an input",
             default: false,
           },
+          "window": {
+            type: "number",
+            description: "Maximum number of inputs to process concurrently",
+            default: 10, // Concurrency limit is the sweet point, once SDK supports array of inputs, this will no longer be necessary
+          },
         })
       ),
   async (args) => {
@@ -37,7 +40,7 @@ export const createCommandDefinition = [
         ? Readable.from(inlineInputs)
         : createInputStream(stdin);
 
-    const { model, parameters, allowErrors } = args;
+    const { model, parameters, allowErrors, window } = args;
 
     const requests = [];
     const consume = async (request) => {
@@ -55,7 +58,7 @@ export const createCommandDefinition = [
     // Produce requests
     for await (const input of inputStream) {
       // If limit has been reached, consume the oldest request first
-      if (requests.length >= REQUEST_LIMIT) await consume(requests.shift());
+      if (requests.length >= window) await consume(requests.shift());
       requests.push(
         args.client.text.generation.create(
           {
