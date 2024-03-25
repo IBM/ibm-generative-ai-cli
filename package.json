@@ -1,6 +1,6 @@
 {
   "name": "@ibm-generative-ai/cli",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "CLI for IBM Generative AI (Tech Preview)",
   "keywords": [
     "ai",
